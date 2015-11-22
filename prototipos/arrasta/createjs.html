@@ -1,0 +1,68 @@
+
+<html>
+  <head>
+    <style>
+        #demoCanvas{
+            border: 1px solid #333;
+        }
+    </style>
+    <script src="js/createjs-2015.05.21.min.js"></script>
+    <script>
+        function init() {
+            var stage = new createjs.Stage("demoCanvas");
+            var targetObject = new createjs.Shape();
+            var draggableObject = new createjs.Shape();
+            var solved, loop_id;
+
+            targetObject.graphics.beginFill("yellow").drawRect(0, 0, 100, 100);
+            draggableObject.graphics.beginFill("blue").drawRect(0, 0, 100, 100);
+
+            targetObject.x = 50; targetObject.y = 50;
+            draggableObject.x = 200; draggableObject.y = 50;
+
+            draggableObject.on("pressmove", function(evt) {
+                evt.target.x = evt.stageX;
+                evt.target.y = evt.stageY;
+            });
+
+            draggableObject.on("pressup", function(evt) { 
+                solved = isSolved(evt.target,targetObject);
+                if(solved){
+                    evt.target.mouseEnabled = false;
+                    evt.target.graphics.clear().beginFill("green").drawRect(0, 0, 100, 100).endFill();
+                }
+            });
+
+            stage.addChild(targetObject);
+            stage.addChild(draggableObject);
+
+            createjs.Ticker.setFPS(60);
+            createjs.Ticker.addEventListener("tick", stage); 
+
+            loop_id = window.setInterval(checkIsSolved,500);  
+            function isSolved(draggableObject, targetObject){
+                var step = 3;
+                if(Math.abs(draggableObject.x - targetObject.x) <= step && Math.abs(draggableObject.y - targetObject.y) <= step){
+                    draggableObject.x = targetObject.x;
+                    draggableObject.y = targetObject.y;    
+                }
+                return draggableObject.x === targetObject.x && draggableObject.y === targetObject.y;
+            }
+            function checkIsSolved(){
+                if(solved){
+                    clearInterval(loop_id);
+                    alert("Congratulation, you win!");
+                }
+            }     
+        }
+    </script>
+  </head>
+  <body onload="init();">
+    <h1>CreateJS - Test draggable object</h1>
+    <h4>The blue object is draggable<br/>The yellow object is not draggable</h4>
+    <canvas id="demoCanvas" width="400" height="200"></canvas>
+<script type="text/javascript">
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();stats.domElement.style.cssText='position:fixed;left:0;top:0;z-index:10000';document.body.appendChild(stats.domElement);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js';document.head.appendChild(script);})()
+</script>
+  </body>
+</html>
