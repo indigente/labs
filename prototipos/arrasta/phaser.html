@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello...</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.4/phaser.min.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+// Arraste a bola para a porta para fazer a porta sumir.
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'arrasta', { preload: preload, create: create, update: update, render: render });
+
+var bola;
+var porta;
+
+function preload() {
+    game.load.image('porta', 'porta.png');
+    game.load.image('bola', 'bola.png');
+}
+
+function create() {
+	game.stage.backgroundColor = 0xffffff;
+    porta = game.add.sprite(5, 5, 'porta');
+    bola = game.add.sprite(300, 100, 'bola');
+
+    bola.inputEnabled = true;
+    bola.input.enableDrag(false, true);
+    bola.events.onDragStop.add(onDragStop, true);
+
+    game.physics.enable(bola, Phaser.Physics.ARCADE);
+    game.physics.enable(porta, Phaser.Physics.ARCADE);
+
+}
+
+function onDragStop(sprite, pointer) {
+    if (pointer.x >= porta.x && pointer.x <= porta.x + porta.width
+        && pointer.y >= porta.y && pointer.y <= porta.y + porta.height) {
+        porta.destroy();
+        setTimeout(gameOver, 100);
+        bola.events.onDragStop.removeAll();
+        bola.input.disableDrag();
+    }
+}
+
+function gameOver() {
+    alert('Você ganhou!');
+}
+
+function update() {
+}
+
+function render() {
+}
+</script>
+
+<script type="text/javascript">
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();stats.domElement.style.cssText='position:fixed;left:0;top:0;z-index:10000';document.body.appendChild(stats.domElement);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js';document.head.appendChild(script);})()
+</script>
+
+</body>
+</html>
