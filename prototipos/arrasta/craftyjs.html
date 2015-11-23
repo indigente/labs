@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,22 +25,34 @@
 	                                    .color("yellow");
 	            draggableObject = Crafty.e("2D, Canvas, Mouse, Color, Draggable")
 	                                    .attr({x:250, y:150, w:100, h:100})
+	                                    .color("black")
+	                                    .enableDrag();
+	                                    
+	           subject2Object = Crafty.e("2D, Canvas, Color")
+	                                    .attr({x:150, y:50, w:100, h:100})
+	                                    .color("red");
+	                                    
+	           draggable2Object = Crafty.e("2D, Canvas, Mouse, Color, Draggable")
+	                                    .attr({x:150, y:250, w:100, h:100})
 	                                    .color("blue")
 	                                    .enableDrag();
-	            draggableObject.bind("StopDrag", function() {
+	           
+	                                                        
+	             console.log("Teste"); //imprime linha no console do navegador
+	            draggable2Object.bind("StopDrag", function() {
 	                solved = isSolved();
 	                if(solved){ //se encontrou a solução muda a cor do objeto
-	                    draggableObject.color("green");
+	                    draggable2Object.color("green");
 	                }
 	            });
 	        }
 	        function isSolved(){
 	            var step = 3;
-	            if(Math.abs(draggableObject.x - subjectObject.x) <= step && Math.abs(draggableObject.y - subjectObject.y) <= step){
-	                draggableObject.x = subjectObject.x;
-	                draggableObject.y = subjectObject.y;    
+	            if(Math.abs(draggable2Object.x - subjectObject.x) <= step && Math.abs(draggable2Object.y - subjectObject.y) <= step){
+	                draggable2Object.x = subjectObject.x;
+	                draggable2Object.y = subjectObject.y;    
 	            }
-	            return draggableObject.x === subjectObject.x && draggableObject.y === subjectObject.y;
+	            return draggable2Object.x === subjectObject.x && draggable2Object.y === subjectObject.y;
 	        }
 	        function checkIsSolved(){
 	            if(solved){
