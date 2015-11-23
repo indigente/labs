@@ -21,8 +21,8 @@
             draggableObject.x = 200; draggableObject.y = 50;
 
             draggableObject.on("pressmove", function(evt) {
-                evt.target.x = evt.stageX;
-                evt.target.y = evt.stageY;
+                evt.target.x = evt.stageX-50;
+                evt.target.y = evt.stageY-50;
             });
 
             draggableObject.on("pressup", function(evt) { 
