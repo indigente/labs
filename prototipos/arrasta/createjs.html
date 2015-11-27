@@ -13,25 +13,26 @@
             var targetObject = new createjs.Shape();
             var draggableObject = new createjs.Shape();
             var solved, loop_id;
+            var objDefaultDimension = {w: 100, h: 100};
 
             createjs.Touch.enable(stage);
 
-            targetObject.graphics.beginFill("yellow").drawRect(0, 0, 100, 100);
-            draggableObject.graphics.beginFill("blue").drawRect(0, 0, 100, 100);
+            targetObject.graphics.beginFill("yellow").drawRect(0, 0, objDefaultDimension.w, objDefaultDimension.h);
+            draggableObject.graphics.beginFill("blue").drawRect(0, 0, objDefaultDimension.w, objDefaultDimension.h);
 
             targetObject.x = 50; targetObject.y = 50;
             draggableObject.x = 200; draggableObject.y = 50;
 
             draggableObject.on("pressmove", function(evt) {
-                evt.target.x = evt.stageX-50;
-                evt.target.y = evt.stageY-50;
+                evt.target.x = evt.stageX-objDefaultDimension.w / 2;
+                evt.target.y = evt.stageY-objDefaultDimension.h / 2;
             });
 
             draggableObject.on("pressup", function(evt) { 
                 solved = isSolved(evt.target,targetObject);
                 if(solved){
                     evt.target.mouseEnabled = false;
-                    evt.target.graphics.clear().beginFill("green").drawRect(0, 0, 100, 100).endFill();
+                    evt.target.graphics.clear().beginFill("green").drawRect(0, 0, objDefaultDimension.w, objDefaultDimension.h).endFill();
                 }
             });
 
