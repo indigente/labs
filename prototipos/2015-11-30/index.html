@@ -43,6 +43,7 @@ function init() {
 	porta.addEventListener("pressup", soltaObjeto);
 
 	// redesenha a cena várias vezes por segundo
+	createjs.Ticker.setFPS(60);
 	createjs.Ticker.addEventListener("tick", stage);
 }
 
@@ -52,8 +53,12 @@ function arrastaObjeto(evt) {
 }
 
 function soltaObjeto(evt) {
-	evt.target.x = evt.target.xini;
-	evt.target.y = evt.target.yini;
+	// interpola posição até a posição inicial
+	createjs.Tween.get(evt.target).to(
+		{x: evt.target.xini,
+		 y: evt.target.yini},
+		300,
+		createjs.Ease.getPowInOut(2));
 }
 
 </script>
