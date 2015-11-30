@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Testes</title>
-	<script type="text/javascript" src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>
+	<script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
 </head>
 <body onload="init();">
 
@@ -11,9 +11,27 @@
 </canvas>
 
 <script type="text/javascript">
-function init() {
+var stage;
+var queue;
+var porta;
+var bola;
 
+function init() {
+	// cria a cena para guardar os objetos na tela
+	stage = new createjs.Stage("canvas");
+	
+	// carrega a porta
+	porta = new createjs.Bitmap("porta.png");
+	porta.x = 10;
+	porta.y = 10;
+
+	// adiciona a porta à cena
+	stage.addChild(porta);
+
+	// redesenha a cena várias vezes por segundo
+	createjs.Ticker.addEventListener("tick", stage);
 }
+
 </script>
 
 </body>
