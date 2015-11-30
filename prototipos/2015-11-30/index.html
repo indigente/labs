@@ -25,11 +25,26 @@ function init() {
 	porta.x = 10;
 	porta.y = 10;
 
-	// adiciona a porta à cena
+	// carrega a bola
+	bola = new createjs.Bitmap("bola.png");
+	bola.x = 600;
+	bola.y = 80;
+
+	// adiciona a porta e a bola à cena
 	stage.addChild(porta);
+	stage.addChild(bola);
+
+	// cadastra eventos
+	bola.addEventListener("pressmove", arrastaObjeto);
+	porta.addEventListener("pressmove", arrastaObjeto);
 
 	// redesenha a cena várias vezes por segundo
 	createjs.Ticker.addEventListener("tick", stage);
+}
+
+function arrastaObjeto(evt) {
+	evt.target.x = evt.stageX - evt.target.getBounds().width / 2;
+	evt.target.y = evt.stageY - evt.target.getBounds().height / 2;
 }
 
 </script>
