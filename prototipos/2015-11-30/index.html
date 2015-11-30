@@ -16,19 +16,21 @@ var queue;
 var porta;
 var bola;
 
+
+
 function init() {
 	// cria a cena para guardar os objetos na tela
 	stage = new createjs.Stage("canvas");
 	
 	// carrega a porta
 	porta = new createjs.Bitmap("porta.png");
-	porta.x = 10;
-	porta.y = 10;
+	porta.xini = porta.x = 10;
+	porta.yini = porta.y = 10;
 
 	// carrega a bola
 	bola = new createjs.Bitmap("bola.png");
-	bola.x = 600;
-	bola.y = 80;
+	bola.xini = bola.x = 600;
+	bola.yini = bola.y = 80;
 
 	// adiciona a porta e a bola à cena
 	stage.addChild(porta);
@@ -36,7 +38,9 @@ function init() {
 
 	// cadastra eventos
 	bola.addEventListener("pressmove", arrastaObjeto);
+	bola.addEventListener("pressup", soltaObjeto);
 	porta.addEventListener("pressmove", arrastaObjeto);
+	porta.addEventListener("pressup", soltaObjeto);
 
 	// redesenha a cena várias vezes por segundo
 	createjs.Ticker.addEventListener("tick", stage);
@@ -45,6 +49,11 @@ function init() {
 function arrastaObjeto(evt) {
 	evt.target.x = evt.stageX - evt.target.getBounds().width / 2;
 	evt.target.y = evt.stageY - evt.target.getBounds().height / 2;
+}
+
+function soltaObjeto(evt) {
+	evt.target.x = evt.target.xini;
+	evt.target.y = evt.target.yini;
 }
 
 </script>
