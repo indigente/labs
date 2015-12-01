@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Testes</title>
+	<script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
+</head>
+<body onload="init();">
+
+<canvas id="canvas" width="800" height="600" style="border: black solid 1px; background-color: #93918e;">
+	
+</canvas>
+
+<script type="text/javascript">
+var stage;
+// objetos
+var jarra, torta, luva;
+// cenário
+var cozinha;
+
+
+function carregaBitmap(stage, nome, x, y) {
+	var obj = new createjs.Bitmap("assets/images/" + nome);
+	obj.x = x;
+	obj.y = y;
+	stage.addChild(obj);
+	return obj;	
+}
+
+function carregaObjeto(stage, nome, x, y) {
+	var obj = carregaBitmap(stage, nome, x, y);
+	obj.addEventListener("pressmove", arrastaObjeto);
+	return obj;
+}
+
+function arrastaObjeto(evt) {
+	evt.target.x = evt.stageX - evt.target.getBounds().width / 2;
+	evt.target.y = evt.stageY - evt.target.getBounds().height / 2;
+}
+
+function init() {
+	// cria a cena para guardar os objetos na tela
+	stage = new createjs.Stage("canvas");
+	
+	cozinha = carregaBitmap(stage, "cozinha.jpg", 0, 0);
+	jarra = carregaObjeto(stage, "jarra.png", 0, 10);
+	torta = carregaObjeto(stage, "torta.png", 200, 10);
+	luva = carregaObjeto(stage, "luva.png", 500, 10);
+
+	// redesenha a cena várias vezes por segundo
+	createjs.Ticker.setFPS(60);
+	createjs.Ticker.addEventListener("tick", stage);
+}
+
+</script>
+
+</body>
+</html>
