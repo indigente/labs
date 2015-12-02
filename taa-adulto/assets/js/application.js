@@ -1,22 +1,24 @@
 (function(){
+    'use strict'
     var stage;
-    // objetos
-    var jarra, torta, luva;
-    // cenário
-    var cenario;
-    //Mapa de solução do problema
-    var mapa = [[0,0],[0,0],    [0,0],[0,0],
-                [0,0],[0,0],    [0,0],[0,0],
-
-                [0,0],[0,0],    [0,0],[0,0],
-                [0,0],[0,0],    [0,0],[0,0]];
+    var disposicaoObjetos = [];
+    var linha = [26,102,427,508];
+    var coluna = [66,202,522,662];
     function init() {
         // cria a cena para guardar os objetos na tela
         stage = new createjs.Stage("canvas");
-        cenario = new Objeto(stage, {src : "cozinha.jpg", x: 0, y: 10});
-        jarra = new Objeto(stage, {src : "jarra.png", x: 0, y: 10},true);
-        torta = new Objeto(stage, {src : "torta.png", x: 200, y: 10},true);
-        luva = new Objeto(stage, {src : "luva.png", x: 500, y: 10},true);
+        //Adicionando a cozinha ao cenario
+        stage.add({src : "cozinha.jpg", x: 0, y: 10});
+        //Adicionando as posicoes finais
+        for (var i = linha.length - 1; i >= 0; i--) {
+            for (var j = coluna.length - 1; j >= 0; j--) {
+                disposicaoObjetos.push({x: coluna[j], y: linha[i]});
+            }
+        }
+        //Adicionando objetos em suas posicoes finais
+        for (var i = disposicaoObjetos.length - 1; i >= 0; i--) {
+            stage.add({src : "jarra.png", x: disposicaoObjetos[i].x, y: disposicaoObjetos[i].y, scaleX: 0.5, scaleY: 0.5},true);
+        };
         // redesenha a cena várias vezes por segundo
         createjs.Ticker.setFPS(60);
         createjs.Ticker.addEventListener("tick", stage);

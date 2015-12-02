@@ -1,4 +1,5 @@
 var Objeto = (function () {
+    'use strict'
     function Objeto(stage, options, isDraggable) {
         this.stage = stage;
         this.options = options;
@@ -16,6 +17,8 @@ var Objeto = (function () {
         this.bitmapObject = new createjs.Bitmap("assets/images/" + this.options.src);
         this.bitmapObject.x = this.options.x;
         this.bitmapObject.y = this.options.y;
+        this.bitmapObject.scaleX = this.options.scaleX || 1;
+        this.bitmapObject.scaleY = this.options.scaleY || 1;
         this.stage.addChild(this.bitmapObject);
     };
     Objeto.prototype.carregaObjeto = function() {
