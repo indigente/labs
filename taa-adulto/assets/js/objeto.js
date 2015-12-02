@@ -10,8 +10,8 @@ var Objeto = (function () {
         }
     }
     Objeto.prototype.arrastaObjeto = function(evt) {
-        evt.target.x = evt.stageX - evt.target.getBounds().width / 2;
-        evt.target.y = evt.stageY - evt.target.getBounds().height / 2;
+        evt.target.x = evt.stageX - evt.target.getBounds().width * evt.target.scaleX / 2;
+        evt.target.y = evt.stageY - evt.target.getBounds().height * evt.target.scaleY / 2;
     };
     Objeto.prototype.carregaBitmap = function() {
         this.bitmapObject = new createjs.Bitmap("assets/images/" + this.options.src);
