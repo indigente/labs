@@ -23,6 +23,8 @@
         // redesenha a cena várias vezes por segundo
         createjs.Ticker.setFPS(60);
         createjs.Ticker.addEventListener("tick", stage);
+        // ativa touchscreen
+        createjs.Touch.enable(stage);
     }
     function colocaObjetoNaPorta(idObjeto, idPorta) {
         stage.add({src : objetos[idObjeto], x: disposicaoObjetos[idPorta].x, y: disposicaoObjetos[idPorta].y, scaleX: 0.5, scaleY: 0.5, drawByCenter: true},true);
