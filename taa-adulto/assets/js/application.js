@@ -4,6 +4,7 @@
     var disposicaoObjetos = [];
     var linha = [26,102,427,508];
     var coluna = [66,202,522,662];
+    var objetos = ['jarra.png','luva.png','torta.png'];
     function init() {
         // cria a cena para guardar os objetos na tela
         stage = new createjs.Stage("canvas");
@@ -17,11 +18,18 @@
         }
         //Adicionando objetos em suas posicoes finais
         for (var i = disposicaoObjetos.length - 1; i >= 0; i--) {
-            stage.add({src : "jarra.png", x: disposicaoObjetos[i].x, y: disposicaoObjetos[i].y, scaleX: 0.5, scaleY: 0.5},true);
+            colocaObjetoNaPorta(rand(objetos.length), i);
         };
         // redesenha a cena várias vezes por segundo
         createjs.Ticker.setFPS(60);
         createjs.Ticker.addEventListener("tick", stage);
+    }
+    function colocaObjetoNaPorta(idObjeto, idPorta) {
+        stage.add({src : objetos[idObjeto], x: disposicaoObjetos[idPorta].x, y: disposicaoObjetos[idPorta].y, scaleX: 0.5, scaleY: 0.5},true);
+    }
+    function rand(max, min){
+        var min = min || 0; //Por default o minimo eh zero
+        return Math.floor((Math.random() * max) + min);
     }
     window.init = init;
 })();
