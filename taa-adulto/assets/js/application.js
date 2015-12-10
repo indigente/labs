@@ -28,6 +28,8 @@ Game.start = function(){
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", tick);
+    // ativa touchscreen
+    createjs.Touch.enable(stage);
 
     var atual = 0, i = 0;
     var target = stage.add({src : objetos[nivel[atual].objeto[i]], x: stage.canvas.width/2, y: stage.canvas.height/2, drawByCenter: true, async: false},true);
