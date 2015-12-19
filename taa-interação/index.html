@@ -93,6 +93,7 @@ function desenhaPortas() {
 function carregaFase(numFase) {
   qtdObjetosPosicionados = 0;
   removeTodosOsObjetos();
+  limpaTodasAsPortas();
 
   var indice = 0;
   for (var i = 0; i < numFase; i++) {
@@ -112,6 +113,12 @@ function carregaFase(numFase) {
 
   for (var i = 0; i < objetos.length; i++) {
     stage.addChild(objetos[i]);
+  }
+}
+
+function limpaTodasAsPortas() {
+  for (var i = 0; i < portas.length; i++) {
+    portas[i].idObjeto = null;
   }
 }
 
@@ -188,6 +195,23 @@ function onObjetoPosicionado(objeto, idPorta) {
   }
 }
 
+function moveObjetoParaPorta(objeto, idPorta) {
+  var porta = portas[idPorta];
+  var portax = porta.x + porta.width / 2;
+  var portay = porta.y + porta.height / 2;
+
+  var finalx = portax - objeto.getBounds().width / 4;
+  var finaly = portay - objeto.getBounds().height / 4;
+
+  createjs.Tween.get(objeto).to(
+      {x: finalx,
+       y: finaly},
+      300,
+      createjs.Ease.getPowInOut(2));
+
+  onObjetoPosicionado(objeto, i);
+}
+
 function soltaObjeto(evt) {
   // show back the cursor
   stage.canvas.style.cursor = "auto";
@@ -204,7 +228,7 @@ function soltaObjeto(evt) {
   }
   if(match!=-1 && portas[match].idObjeto == null){
     document.getElementById('box').innerText=i;
-    onObjetoPosicionado(evt.target, i);
+    moveObjetoParaPorta(evt.target, match);
   }
   else {
     onObjetoPosicionado(evt.target, null);
