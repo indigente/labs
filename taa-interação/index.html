@@ -203,7 +203,7 @@ function adicionaObjeto(idObjeto, idPorta) {
   
   objeto.scaleX = objeto.scaleY = .5;
   objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
-  objeto.y = objeto.iniY = 200;
+  objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
 
   objeto.on("mousedown", function(evt){
     this.parent.addChild(this);
