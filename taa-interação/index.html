@@ -23,7 +23,9 @@
 
   //objetos do jogo e portas
   var objetos = [];
+  var qtdObjetosPosicionados = 0;
   var portas = [];
+  var faseAtual = 0; // de 0 a 17
 
   function init(){
 
@@ -71,7 +73,7 @@
       stage.addChild(shape);
     }
 
-    carregaFase(0);
+    carregaFase(faseAtual);
 
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
@@ -80,6 +82,9 @@
 
 // numFase: de 0 a 17
 function carregaFase(numFase) {
+  qtdObjetosPosicionados = 0;
+  removeTodosOsObjetos();
+
   var indice = 0;
   for (var i = 0; i < numFase; i++) {
     indice += qtdObjetosPorFase[i] * 3;
@@ -90,27 +95,41 @@ function carregaFase(numFase) {
     var idObjeto = dadosFase[i + 1];
     var idOutroObjeto = dadosFase[i + 2];
     
-    var objeto = carregaObjeto(idObjeto, idPorta);
-    var outro = carregaObjeto(idOutroObjeto, null);
+    var objeto = adicionaObjeto(idObjeto, idPorta);
+    var outro = adicionaObjeto(idOutroObjeto, null);
     objetos.push(objeto);
     objetos.push(outro);
   }
 
   for (var i = 0; i < objetos.length; i++) {
-    console.log(objetos[i]);
     stage.addChild(objetos[i]);
   }
 }
 
-function carregaObjeto(idObjeto, idPorta) {
+function removeObjeto(objeto) {
+  var idObjeto = objeto.idObjeto;
+  var indice = objetos.indexOf(idObjeto);
+  objetos.splice(indice, 1);
+  stage.removeChild(objeto);
+}
+
+function removeTodosOsObjetos() {
+  for (var i = objetos.length - 1; i >= 0; i--) {
+    removeObjeto(objetos[i]);
+  };
+}
+
+function adicionaObjeto(idObjeto, idPorta) {
   var objeto = new createjs.Bitmap(loader.getResult("objeto" + idObjeto));
-  objeto.porta = idPorta;
+  objeto.portaCerta = idPorta;
+  objeto.idPorta = null;
+  objeto.idObjeto = idObjeto;
+  objeto.offX = 0;
+  objeto.offY = 0;
+  
   objeto.scaleX = objeto.scaleY = .5;
   objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
   objeto.y = objeto.iniY = 200;
-  objeto.offX = 0;
-  objeto.offY = 0;
-
 
   objeto.on("mousedown", function(evt){
    this.offX = this.x - evt.stageX;
@@ -126,6 +145,34 @@ function carregaObjeto(idObjeto, idPorta) {
   objeto.addEventListener("pressup", soltaObjeto);
 
   return objeto;
+}
+
+function qtdObjetosEmPortas() {
+  var qtd = 0;
+  for (var i = 0; i < objetos.length; i++) {
+    if (objetos[i].idPorta != null) {
+      qtd++;
+    }
+  }
+  return qtd;
+}
+
+function todosOsObjetosForamPosicionados() {
+  return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];  
+}
+
+function avancaFase() {
+  faseAtual++;
+  if (fase <= 17) {
+    carregaFase(faseAtual);
+  }
+}
+
+function onObjetoPosicionado(objeto, idPorta) {
+  objeto.idPorta = idPorta;
+  if (todosOsObjetosForamPosicionados()) {
+    avancaFase();
+  }
 }
 
 function soltaObjeto(evt) {
@@ -144,8 +191,10 @@ function soltaObjeto(evt) {
   }
   if(match!=-1){
     document.getElementById('box').innerText=i;
+    onObjetoPosicionado(evt.target, i);
   }
   else {
+    onObjetoPosicionado(evt.target, null);
     createjs.Tween.get(evt.target).to(
         {x: evt.target.iniX,
          y: evt.target.iniY},
