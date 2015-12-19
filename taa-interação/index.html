@@ -132,8 +132,9 @@ function adicionaObjeto(idObjeto, idPorta) {
   objeto.y = objeto.iniY = 200;
 
   objeto.on("mousedown", function(evt){
-   this.offX = this.x - evt.stageX;
-   this.offY = this.y - evt.stageY;
+    this.parent.addChild(this);
+    this.offX = this.x - evt.stageX;
+    this.offY = this.y - evt.stageY;
   });
 
   objeto.on("pressmove", function(evt){
