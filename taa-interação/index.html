@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Testes</title>
+  <script type="text/javascript" src="assets/js/fases.js"></script>
   <script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
 </head>
 <body onload="init();">
@@ -33,11 +34,11 @@
 
     manifest = [
       {src: "cozinha.jpg", id: "cozinha"},
-      {src: "jarra.png", id: "jarra"},
-      {src: "luva.png", id: "luva"},
-      {src: "torta.png", id: "torta"}
-
     ];
+
+    for (var i = 1; i <= 40; i++) {
+      manifest.push({src: "objeto" + i + ".png", id: "objeto" + i});
+    }
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener("complete", handleComplete);
@@ -70,42 +71,62 @@
       stage.addChild(shape);
     }
 
-  
-    // carrega os objetos
-    objetos.push(new createjs.Bitmap(loader.getResult("jarra")));
-    objetos.push(new createjs.Bitmap(loader.getResult("luva")));
-    objetos.push(new createjs.Bitmap(loader.getResult("torta")));
-    
-
-    for(i = 0; i < objetos.length; i++){
-      var objeto = objetos[i];
-      objeto.scaleX = objeto.scaleY = .5;
-      objeto.x = objeto.iniX = i * 200;
-      objeto.y = objeto.iniY = 200;
-      objeto.offX = 0;
-      objeto.offY = 0;
-
-
-      objeto.on("mousedown", function(evt){
-       this.offX = this.x - evt.stageX;
-       this.offY = this.y - evt.stageY;
-      });
-
-      objeto.on("pressmove", function(evt){
-        stage.canvas.style.cursor = "none";
-        this.x = evt.stageX + this.offX;
-        this.y = evt.stageY + this.offY;
-      });
-
-      objeto.addEventListener("pressup", soltaObjeto);
-      stage.addChild(objeto);
-      
-    }
+    carregaFase(0);
 
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
   }
+
+// numFase: de 0 a 17
+function carregaFase(numFase) {
+  var indice = 0;
+  for (var i = 0; i < numFase; i++) {
+    indice += qtdObjetosPorFase[i] * 3;
+  }
+
+  for (var i = indice; i <= indice + 3 * (qtdObjetosPorFase[numFase] - 1); i += 3) {
+    var idPorta = dadosFase[i];
+    var idObjeto = dadosFase[i + 1];
+    var idOutroObjeto = dadosFase[i + 2];
+    
+    var objeto = carregaObjeto(idObjeto, idPorta);
+    var outro = carregaObjeto(idOutroObjeto, null);
+    objetos.push(objeto);
+    objetos.push(outro);
+  }
+
+  for (var i = 0; i < objetos.length; i++) {
+    console.log(objetos[i]);
+    stage.addChild(objetos[i]);
+  }
+}
+
+function carregaObjeto(idObjeto, idPorta) {
+  var objeto = new createjs.Bitmap(loader.getResult("objeto" + idObjeto));
+  objeto.porta = idPorta;
+  objeto.scaleX = objeto.scaleY = .5;
+  objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
+  objeto.y = objeto.iniY = 200;
+  objeto.offX = 0;
+  objeto.offY = 0;
+
+
+  objeto.on("mousedown", function(evt){
+   this.offX = this.x - evt.stageX;
+   this.offY = this.y - evt.stageY;
+  });
+
+  objeto.on("pressmove", function(evt){
+    stage.canvas.style.cursor = "none";
+    this.x = evt.stageX + this.offX;
+    this.y = evt.stageY + this.offY;
+  });
+
+  objeto.addEventListener("pressup", soltaObjeto);
+
+  return objeto;
+}
 
 function soltaObjeto(evt) {
   // show back the cursor
