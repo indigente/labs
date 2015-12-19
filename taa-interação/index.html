@@ -55,7 +55,7 @@
     
     inicializaPortas();
     desenhaPortas();
-    carregaFase(faseAtual);
+    demonstraFase(0);
 
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
@@ -89,11 +89,50 @@ function desenhaPortas() {
   }
 }
 
-// numFase: de 0 a 17
-function carregaFase(numFase) {
+function demonstraFase(numFase) {
   qtdObjetosPosicionados = 0;
   removeTodosOsObjetos();
   limpaTodasAsPortas();
+
+  var especificacao = getEspecificacaoFase(numFase);
+
+  animaObjeto(numFase, especificacao, 0);
+}
+
+function animaObjeto(numFase, especificacao, numObjeto) {
+  if (numObjeto >= especificacao.length) {
+    carregaFase(numFase);
+    return;
+  }
+  var registro = especificacao[numObjeto];
+
+  var objeto = new createjs.Bitmap(loader.getResult("objeto" + registro.idObjeto));
+  objetos.push(objeto);
+  stage.addChild(objeto);
+  objeto.scaleX = 0.5;
+  objeto.scaleY = 0.5;
+  var posFinal = getPosicaoDoObjetoNaPorta(objeto, registro.idPorta);
+
+  objeto.x = (stage.canvas.width - objeto.getBounds().width) / 2;
+  objeto.y = (stage.canvas.height - objeto.getBounds().height) / 2;
+  objeto.scaleX = 1.0;
+  objeto.scaleY = 1.0;
+
+  createjs.Tween.get(objeto)
+    .wait(500)
+    .to({
+        scaleX: 0.5,
+        scaleY: 0.5,
+        x: posFinal.x,
+        y: posFinal.y},
+        1000)
+    .wait(500)
+    .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
+
+}
+
+function getEspecificacaoFase(numFase) {
+  var especificacao = [];
 
   var indice = 0;
   for (var i = 0; i < numFase; i++) {
@@ -104,11 +143,30 @@ function carregaFase(numFase) {
     var idPorta = dadosFase[i];
     var idObjeto = dadosFase[i + 1];
     var idOutroObjeto = dadosFase[i + 2];
-    
-    var objeto = adicionaObjeto(idObjeto, idPorta);
-    var outro = adicionaObjeto(idOutroObjeto, null);
+
+    especificacao.push({
+      idPorta: dadosFase[i],
+      idObjeto: dadosFase[i + 1],
+      idOutroObjeto: dadosFase[i + 2]});
+  }
+
+  return especificacao;
+}
+
+// numFase: de 0 a 17
+function carregaFase(numFase) {
+  qtdObjetosPosicionados = 0;
+  removeTodosOsObjetos();
+  limpaTodasAsPortas();
+
+  var especificacao = getEspecificacaoFase(numFase);
+  for (var i = 0; i < especificacao.length; i++) {
+    var registro = especificacao[i];
+
+    var objeto = adicionaObjeto(registro.idObjeto, registro.idPorta);
+    var outro = adicionaObjeto(registro.idOutroObjeto, null);
     objetos.push(objeto);
-    objetos.push(outro);
+    objetos.push(outro);    
   }
 
   for (var i = 0; i < objetos.length; i++) {
@@ -181,7 +239,7 @@ function todosOsObjetosForamPosicionados() {
 function avancaFase() {
   faseAtual++;
   if (faseAtual <= 17) {
-    carregaFase(faseAtual);
+    setTimeout(function() { demonstraFase(faseAtual); }, 1000);
   }
 }
 
@@ -195,7 +253,7 @@ function onObjetoPosicionado(objeto, idPorta) {
   }
 }
 
-function moveObjetoParaPorta(objeto, idPorta) {
+function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
   var porta = portas[idPorta];
   var portax = porta.x + porta.width / 2;
   var portay = porta.y + porta.height / 2;
@@ -203,9 +261,14 @@ function moveObjetoParaPorta(objeto, idPorta) {
   var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
   var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
 
+  return {x: finalx, y: finaly};  
+}
+
+function moveObjetoParaPorta(objeto, idPorta) {
+  var pos = getPosicaoDoObjetoNaPorta(objeto, idPorta);
   createjs.Tween.get(objeto).to(
-      {x: finalx,
-       y: finaly},
+      {x: pos.x,
+       y: pos.y},
       300,
       createjs.Ease.getPowInOut(2));
 
