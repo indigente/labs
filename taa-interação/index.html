@@ -200,8 +200,8 @@ function moveObjetoParaPorta(objeto, idPorta) {
   var portax = porta.x + porta.width / 2;
   var portay = porta.y + porta.height / 2;
 
-  var finalx = portax - objeto.getBounds().width / 4;
-  var finaly = portay - objeto.getBounds().height / 4;
+  var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
+  var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
 
   createjs.Tween.get(objeto).to(
       {x: finalx,
