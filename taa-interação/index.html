@@ -27,6 +27,11 @@
   var portas = [];
   var faseAtual = 0; // de 0 a 17
 
+  posicoesPortas = {
+    x: [32, 167, 488, 623],
+    y: [5, 85, 413, 493]
+  };
+
   function init(){
 
     // cria a cena para guardar os objetos na tela
@@ -36,6 +41,7 @@
 
     manifest = [
       {src: "cozinha.jpg", id: "cozinha"},
+      {src: "porta.png", id: "porta"},
     ];
 
     for (var i = 1; i <= 40; i++) {
@@ -54,7 +60,6 @@
     stage.addChild(cozinha);
     
     inicializaPortas();
-    desenhaPortas();
     demonstraFase(0);
 
     // redesenha a cena várias vezes por segundo
@@ -65,27 +70,18 @@
 function inicializaPortas() {
   // cria as portas
   // coordenadas x e y das portas
-  portasX=[40,200,500,640];
-  portasY=[20,100,420,500];
 
   for(i = 0; i < 16 ; i++){ 
-    portas[i]={
-      x:portasX[i%4],
-      y:portasY[Math.floor(i/4)],
-      width:100,
-      height:60,
-      objeto: null
-    };
-  }
-}
+    var porta = new createjs.Bitmap(loader.getResult("porta"));
+    stage.addChild(porta);
 
-function desenhaPortas() {
-  for(i = 0; i < 16 ; i++) { 
-    //test: desenha as portas para que sejam visibles
-    var porta=portas[i];
-    var shape = new createjs.Shape();
-    shape.graphics.beginFill("#ff0000").drawRect(porta.x,porta.y,porta.width,porta.height);
-    stage.addChild(shape);
+    porta.x = posicoesPortas.x[i%4];
+    porta.y = posicoesPortas.y[Math.floor(i/4)];
+    porta.width = porta.getBounds().width;
+    porta.height = porta.getBounds().height;
+    porta.objeto =  null;
+
+    portas[i] = porta;
   }
 }
 
@@ -255,8 +251,8 @@ function onObjetoPosicionado(objeto, idPorta) {
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
   var porta = portas[idPorta];
-  var portax = porta.x + porta.width / 2;
-  var portay = porta.y + porta.height / 2;
+  var portax = porta.x + porta.getBounds().width / 2;
+  var portay = porta.y + porta.getBounds().height / 2;
 
   var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
   var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
