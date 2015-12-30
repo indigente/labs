@@ -61,6 +61,9 @@
     
     inicializaPortas();
     demonstraFase(0);
+    for (var i = 0; i < 16; i++) {
+      abrePorta(i);
+    }
 
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
@@ -75,10 +78,14 @@ function inicializaPortas() {
     var porta = new createjs.Bitmap(loader.getResult("porta"));
     stage.addChild(porta);
 
-    porta.x = posicoesPortas.x[i%4];
-    porta.y = posicoesPortas.y[Math.floor(i/4)];
+    porta.topleftx = porta.x = posicoesPortas.x[i%4];
+    porta.toplefty = porta.y = posicoesPortas.y[Math.floor(i/4)];
     porta.width = porta.getBounds().width;
     porta.height = porta.getBounds().height;
+    if (i % 2 == 1) {
+      porta.regX = porta.width;
+      porta.x += porta.getBounds().width;
+    }
     porta.objeto =  null;
 
     portas[i] = porta;
@@ -251,8 +258,8 @@ function onObjetoPosicionado(objeto, idPorta) {
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
   var porta = portas[idPorta];
-  var portax = porta.x + porta.getBounds().width / 2;
-  var portay = porta.y + porta.getBounds().height / 2;
+  var portax = porta.topleftx + porta.getBounds().width / 2;
+  var portay = porta.toplefty + porta.getBounds().height / 2;
 
   var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
   var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
@@ -269,6 +276,31 @@ function moveObjetoParaPorta(objeto, idPorta) {
       createjs.Ease.getPowInOut(2));
 
   onObjetoPosicionado(objeto, i);
+}
+
+function calculaSkewPorta(idPorta) {
+  var finalSkewY = (idPorta < 8 ? -20 : 20);
+  if (idPorta % 2 == 1) {
+    finalSkewY = -finalSkewY;
+  }
+  return finalSkewY;
+}
+
+function abrePorta(idPorta, callback) {
+  var finalSkewY = calculaSkewPorta(idPorta);
+
+  var porta = portas[idPorta];
+  createjs.Tween.get(porta).to( 
+      {skewY: finalSkewY,
+        scaleX: 0},
+      300
+    ).call(function() {
+      porta.skewY = -finalSkewY;
+      createjs.Tween.get(porta).to(
+        {scaleX: -0.2},
+        100
+        )
+    });
 }
 
 function soltaObjeto(evt) {
