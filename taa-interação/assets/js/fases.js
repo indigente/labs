@@ -8,7 +8,7 @@ var qtdObjetosPorFase = [
 	7, 7, 7,
 	8, 8, 8];
 
-// O primeiro número é o *id* da porta; o segundo é o *id* do objeto que vai ser colocado na porta, e o terceiro é o *id* de um outro objeto que vai aparecer no final só pra confundir.
+// O primeiro número é o *id* da porta (contado a partir de 1); o segundo é o *id* do objeto que vai ser colocado na porta, e o terceiro é o *id* de um outro objeto que vai aparecer no final só pra confundir.
 
 var dadosFase = [
 	11 , 3 , 10 , //13
@@ -169,12 +169,8 @@ function getEspecificacaoFase(numFase) {
   }
 
   for (var i = indice; i <= indice + 3 * (qtdObjetosPorFase[numFase] - 1); i += 3) {
-    var idPorta = dadosFase[i];
-    var idObjeto = dadosFase[i + 1];
-    var idOutroObjeto = dadosFase[i + 2];
-
     especificacao.push({
-      idPorta: dadosFase[i],
+      idPorta: dadosFase[i] - 1,
       idObjeto: dadosFase[i + 1],
       idOutroObjeto: dadosFase[i + 2]});
   }
