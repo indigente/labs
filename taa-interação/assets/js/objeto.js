@@ -17,7 +17,7 @@ function getPortaSobObjeto(objeto) {
   for (var i = 0; i < 16 ; i++){
     porta = portas[i];
    
-    if (getIntersection(porta, objeto.getTransformedBounds())) {
+    if (getIntersection(porta.topleft, objeto.getTransformedBounds())) {
       match = i;
       break;
     }
@@ -26,6 +26,7 @@ function getPortaSobObjeto(objeto) {
 }
 
 function soltaObjeto(evt) {
+  destacaPorta(-1);
   // show back the cursor
   stage.canvas.style.cursor = "auto";
 
@@ -85,6 +86,8 @@ function adicionaObjeto(idObjeto, idPorta) {
     stage.canvas.style.cursor = "none";
     this.x = evt.stageX + this.offX;
     this.y = evt.stageY + this.offY;
+    var match = getPortaSobObjeto(evt.target);
+    destacaPorta(match);
   });
 
   objeto.addEventListener("pressup", soltaObjeto);
@@ -98,8 +101,8 @@ function todosOsObjetosForamPosicionados() {
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
   var porta = portas[idPorta];
-  var portax = porta.topleftx + porta.getBounds().width / 2;
-  var portay = porta.toplefty + porta.getBounds().height / 2;
+  var portax = porta.topleft.x + porta.getBounds().width / 2;
+  var portay = porta.topleft.y + porta.getBounds().height / 2;
 
   var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
   var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;

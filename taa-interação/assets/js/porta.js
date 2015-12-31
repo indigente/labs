@@ -38,6 +38,12 @@ function fechaTodasAsPortas() {
   }
 }
 
+function destacaPorta(idPorta) {
+  for (var i = 0; i < portas.length; i++) {
+    portas[i].alpha = (i == idPorta ? 0.5 : 1.0);
+  }
+}
+
 function inicializaPortas() {
   // as portas de baixo devem ser desenhadas de baixo pra cima, pois na
   // animação de abrir porta, a imagem da porta de cima deve passar sobre
@@ -48,10 +54,11 @@ function inicializaPortas() {
     var porta = new createjs.Bitmap(loader.getResult("porta"));
     stage.addChild(porta);
 
-    porta.topleftx = porta.x = posicoesPortas.x[i%4];
-    porta.toplefty = porta.y = posicoesPortas.y[Math.floor(i/4)];
-    porta.width = porta.getBounds().width;
-    porta.height = porta.getBounds().height;
+    porta.topleft = {x: 0, y: 0};
+    porta.topleft.x = porta.x = posicoesPortas.x[i%4];
+    porta.topleft.y = porta.y = posicoesPortas.y[Math.floor(i/4)];
+    porta.topleft.width = porta.width = porta.getBounds().width;
+    porta.topleft.height = porta.height = porta.getBounds().height;
     if (i % 2 == 1) {
       porta.regX = porta.width;
       porta.x += porta.getBounds().width;
