@@ -11,22 +11,28 @@ function qtdObjetosEmPortas() {
   return qtd;
 }
 
+// Retorna id da porta sob o objeto ou, se não existir, -1.
+function getPortaSobObjeto(objeto) {
+  var match = -1;
+  for (var i = 0; i < 16 ; i++){
+    porta = portas[i];
+   
+    if (getIntersection(porta, objeto.getTransformedBounds())) {
+      match = i;
+      break;
+    }
+  }
+  return match;
+}
+
 function soltaObjeto(evt) {
   // show back the cursor
   stage.canvas.style.cursor = "auto";
 
+  var match = getPortaSobObjeto(evt.target)
   // check para ver se estou arrastrando sobre uma porta
-  var match=-1;
-  for(i = 0; i < 16 ; i++){
-    porta = portas[i];
-   
-    if( getIntersection(porta,evt.target.getTransformedBounds())){
-      match=i;
-      break;
-    }
-  }
   if(match!=-1 && portas[match].idObjeto == null){
-    document.getElementById('box').innerText=i;
+    document.getElementById('box').innerText = match;
     moveObjetoParaPorta(evt.target, match);
   }
   else {
@@ -109,7 +115,7 @@ function moveObjetoParaPorta(objeto, idPorta) {
       300,
       createjs.Ease.getPowInOut(2));
 
-  onObjetoPosicionado(objeto, i);
+  onObjetoPosicionado(objeto, idPorta);
 }
 
 function animaObjeto(numFase, especificacao, numObjeto) {
