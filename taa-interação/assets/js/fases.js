@@ -1,3 +1,5 @@
+var faseAtual = 0; // de 0 a 17
+
 var qtdObjetosPorFase = [
 	3, 3, 3,
 	4, 4, 4,
@@ -109,9 +111,66 @@ var dadosFase = [
 	9 , 9 , 6 , 
 	1 , 35 , 27];
 
-			//trace("Indices"+Indices.length);
-			// for(i=0;i<297;i+=3){
-				// this.tentativas.push(new Tentativa(this.Portas[Indices[i]-1],this.Objetos[Indices[i+1]-1]));
-				// this.aleatorias.push(this.Objetos[Indices[i+2]-1]);
-				// 
-			// }
+function avancaFase() {
+  faseAtual++;
+  if (faseAtual <= 17) {
+    setTimeout(function() { demonstraFase(faseAtual); }, 1000);
+  }
+}
+
+// numFase: de 0 a 17
+function carregaFase(numFase) {
+  qtdObjetosPosicionados = 0;
+  removeTodosOsObjetos();
+  limpaTodasAsPortas();
+  for (var i = 0; i < portas.length; i++) {
+    abrePorta(i);
+  }
+
+
+  var especificacao = getEspecificacaoFase(numFase);
+  for (var i = 0; i < especificacao.length; i++) {
+    var registro = especificacao[i];
+
+    var objeto = adicionaObjeto(registro.idObjeto, registro.idPorta);
+    var outro = adicionaObjeto(registro.idOutroObjeto, null);
+    objetos.push(objeto);
+    objetos.push(outro);    
+  }
+
+  for (var i = 0; i < objetos.length; i++) {
+    stage.addChild(objetos[i]);
+  }
+}
+
+function demonstraFase(numFase) {
+  qtdObjetosPosicionados = 0;
+  removeTodosOsObjetos();
+  limpaTodasAsPortas();
+
+  var especificacao = getEspecificacaoFase(numFase);
+
+  animaObjeto(numFase, especificacao, 0);
+}
+
+function getEspecificacaoFase(numFase) {
+  var especificacao = [];
+
+  var indice = 0;
+  for (var i = 0; i < numFase; i++) {
+    indice += qtdObjetosPorFase[i] * 3;
+  }
+
+  for (var i = indice; i <= indice + 3 * (qtdObjetosPorFase[numFase] - 1); i += 3) {
+    var idPorta = dadosFase[i];
+    var idObjeto = dadosFase[i + 1];
+    var idOutroObjeto = dadosFase[i + 2];
+
+    especificacao.push({
+      idPorta: dadosFase[i],
+      idObjeto: dadosFase[i + 1],
+      idOutroObjeto: dadosFase[i + 2]});
+  }
+
+  return especificacao;
+}
