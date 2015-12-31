@@ -16,6 +16,12 @@ function abrePorta(idPorta, callback) {
     .to({scaleX: -0.2}, 100);
 }
 
+function abreTodasAsPortas() {
+  for (var i = 0; i < portas.length; i++) {
+    abrePorta(i);
+  }
+}
+
 // TODO: call callback
 function fechaPorta(idPorta, callback) {
   var finalSkewY = calculaSkewPorta(idPorta);
@@ -24,6 +30,12 @@ function fechaPorta(idPorta, callback) {
     .to({skewY: -finalSkewY, scaleX: 0}, 100)
     .to({skewY: finalSkewY}, 0)
     .to({skewY: 0, scaleX: 1}, 300);
+}
+
+function fechaTodasAsPortas() {
+  for (var i = 0; i < portas.length; i++) {
+    fechaPorta(i);
+  }
 }
 
 function inicializaPortas() {

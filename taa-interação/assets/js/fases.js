@@ -1,5 +1,5 @@
 var faseAtual = 0; // de 0 a 17
-
+const MAX_FASE = 17;
 var qtdObjetosPorFase = [
 	3, 3, 3,
 	4, 4, 4,
@@ -112,10 +112,16 @@ var dadosFase = [
 	1 , 35 , 27];
 
 function avancaFase() {
-  faseAtual++;
-  if (faseAtual <= 17) {
-    setTimeout(function() { demonstraFase(faseAtual); }, 1000);
-  }
+  var tempoParaFecharPorta = 400;
+  setTimeout(function() {
+	  enviaObjetosParaOFundo();
+	  fechaTodasAsPortas();
+	  faseAtual++;
+	  if (faseAtual <= MAX_FASE) {
+	    setTimeout(function() { demonstraFase(faseAtual); }, 1000);
+	  }
+  },
+  tempoParaFecharPorta);
 }
 
 // numFase: de 0 a 17
@@ -123,10 +129,7 @@ function carregaFase(numFase) {
   qtdObjetosPosicionados = 0;
   removeTodosOsObjetos();
   limpaTodasAsPortas();
-  for (var i = 0; i < portas.length; i++) {
-    abrePorta(i);
-  }
-
+  abreTodasAsPortas();
 
   var especificacao = getEspecificacaoFase(numFase);
   for (var i = 0; i < especificacao.length; i++) {
@@ -141,6 +144,10 @@ function carregaFase(numFase) {
   for (var i = 0; i < objetos.length; i++) {
     stage.addChild(objetos[i]);
   }
+}
+
+function encerraDemonstracao(numFase) {
+	setTimeout(function() { carregaFase(numFase) }, 500);
 }
 
 function demonstraFase(numFase) {

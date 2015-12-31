@@ -114,7 +114,7 @@ function moveObjetoParaPorta(objeto, idPorta) {
 
 function animaObjeto(numFase, especificacao, numObjeto) {
   if (numObjeto >= especificacao.length) {
-    setTimeout(function() { carregaFase(numFase) }, 500);
+    encerraDemonstracao(numFase);
     return;
   }
   var registro = especificacao[numObjeto];
@@ -155,4 +155,10 @@ function onObjetoPosicionado(objeto, idPorta) {
       avancaFase();
     }
   }
+}
+
+function enviaObjetosParaOFundo() {
+	for (var i = 0; i < objetos.length; i++) {
+		stage.addChildAt(objetos[i], 1);
+	}
 }
