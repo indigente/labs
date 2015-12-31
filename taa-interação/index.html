@@ -61,9 +61,6 @@
     
     inicializaPortas();
     demonstraFase(0);
-    for (var i = 0; i < 16; i++) {
-      abrePorta(i);
-    }
 
     // redesenha a cena várias vezes por segundo
     createjs.Ticker.setFPS(60);
@@ -71,10 +68,12 @@
   }
 
 function inicializaPortas() {
-  // cria as portas
-  // coordenadas x e y das portas
-
-  for(i = 0; i < 16 ; i++){ 
+  // as portas de baixo devem ser desenhadas de baixo pra cima, pois na
+  // animação de abrir porta, a imagem da porta de cima deve passar sobre
+  // a imagem da porta de baixo.
+  var ordemPortas = [0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8];
+  for (var j = 0; j < ordemPortas.length; j++) {
+    var i = ordemPortas[j];
     var porta = new createjs.Bitmap(loader.getResult("porta"));
     stage.addChild(porta);
 
@@ -104,7 +103,7 @@ function demonstraFase(numFase) {
 
 function animaObjeto(numFase, especificacao, numObjeto) {
   if (numObjeto >= especificacao.length) {
-    carregaFase(numFase);
+    setTimeout(function() { carregaFase(numFase) }, 500);
     return;
   }
   var registro = especificacao[numObjeto];
@@ -122,6 +121,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
   objeto.scaleY = 1.0;
 
   createjs.Tween.get(objeto)
+    .call(abrePorta, [registro.idPorta])
     .wait(500)
     .to({
         scaleX: 0.5,
@@ -129,7 +129,10 @@ function animaObjeto(numFase, especificacao, numObjeto) {
         x: posFinal.x,
         y: posFinal.y},
         1000)
-    .wait(500)
+    .wait(100)
+    .call(function() {stage.addChildAt(objeto, 1); })
+    .call(fechaPorta, [registro.idPorta])
+    .wait(400)
     .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
 
 }
@@ -161,6 +164,10 @@ function carregaFase(numFase) {
   qtdObjetosPosicionados = 0;
   removeTodosOsObjetos();
   limpaTodasAsPortas();
+  for (var i = 0; i < portas.length; i++) {
+    abrePorta(i);
+  }
+
 
   var especificacao = getEspecificacaoFase(numFase);
   for (var i = 0; i < especificacao.length; i++) {
@@ -286,21 +293,25 @@ function calculaSkewPorta(idPorta) {
   return finalSkewY;
 }
 
+// TODO: call callback
 function abrePorta(idPorta, callback) {
   var finalSkewY = calculaSkewPorta(idPorta);
-
   var porta = portas[idPorta];
-  createjs.Tween.get(porta).to( 
-      {skewY: finalSkewY,
-        scaleX: 0},
-      300
-    ).call(function() {
-      porta.skewY = -finalSkewY;
-      createjs.Tween.get(porta).to(
-        {scaleX: -0.2},
-        100
-        )
-    });
+  createjs.Tween.get(porta)
+    .to({skewY: 0, scaleX: 1}, 0)
+    .to({skewY: finalSkewY, scaleX: 0}, 300)
+    .to({skewY: -finalSkewY}, 0)
+    .to({scaleX: -0.2}, 100);
+}
+
+// TODO: call callback
+function fechaPorta(idPorta, callback) {
+  var finalSkewY = calculaSkewPorta(idPorta);
+  var porta = portas[idPorta];
+  createjs.Tween.get(porta)
+    .to({skewY: -finalSkewY, scaleX: 0}, 100)
+    .to({skewY: finalSkewY}, 0)
+    .to({skewY: 0, scaleX: 1}, 300);
 }
 
 function soltaObjeto(evt) {
