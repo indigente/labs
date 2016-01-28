@@ -29,6 +29,7 @@
 
     // cria a cena para guardar os objetos na tela
     stage = new createjs.Stage("canvas");
+    createjs.Touch.enable(stage);
     w = stage.canvas.width;
     h = stage.canvas.height;
 
