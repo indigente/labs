@@ -112,14 +112,18 @@ var dadosFase = [
 	1 , 35 , 27];
 
 function avancaFase() {
+  calculaPontuacaoFase(faseAtual, objetos);
+
   var tempoParaFecharPorta = 400;
   setTimeout(function() {
 	  enviaObjetosParaOFundo();
 	  fechaTodasAsPortas();
 	  faseAtual++;
-	  if (faseAtual <= MAX_FASE) {
+	  if (faseAtual <= MAX_FASE && deveContinuar()) {
 	    setTimeout(function() { demonstraFase(faseAtual); }, 1000);
-	  }
+	  } else {
+      gameOver();
+    }
   },
   tempoParaFecharPorta);
 }
@@ -176,4 +180,18 @@ function getEspecificacaoFase(numFase) {
   }
 
   return especificacao;
+}
+
+function gameOver() {
+  removeTodosOsObjetos();
+
+  var bg = new createjs.Shape();
+  bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+  stage.addChild(bg);
+
+  var text = new createjs.Text("Obrigado por participar!", "36px Arial", "#333");
+  text.textAlign = "center";
+  stage.addChild(text);
+  text.x = stage.canvas.width / 2;
+  text.y = stage.canvas.height / 2;
 }
