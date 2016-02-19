@@ -1,9 +1,11 @@
 var pontuacao = [];
 
-function criaPontuacaoFase(totalObjetos, matchesPerfeitos) {
+function criaPontuacaoFase(totalObjetos, objCerto, portaCerta, objCertoPortaCerta) {
 	var p = {};
 	p.totalObjetos = totalObjetos;
-	p.matchesPerfeitos = matchesPerfeitos;
+	p.objCerto = objCerto;
+	p.portaCerta = portaCerta;
+	p.objCertoPortaCerta = objCertoPortaCerta;
 	return p;
 }
 
@@ -15,19 +17,38 @@ function criaPontuacaoFase(totalObjetos, matchesPerfeitos) {
 function calculaPontuacaoFase(numFase, objetos) {
 	// objeto: portaCerta, idPorta, idObjeto
 
-	var qtdMatchesPerfeitos = 0;
+	var objCertoPortaCerta = 0;
+	var objCerto = 0;
+	var portaCerta = 0;
+
+	var listaPortasCertas = {};
 	for (var i = 0; i < objetos.length; i++) {
 		var objeto = objetos[i];
-
-		if (objeto.idPorta !== null && objeto.idPorta === objeto.portaCerta) {
-			qtdMatchesPerfeitos++;
+		if (objeto.portaCerta !== null) {
+			listaPortasCertas[objeto.portaCerta] = true;
 		}
 	}
 
-	var pontuacaoFase = criaPontuacaoFase(objetos.length, qtdMatchesPerfeitos);
+	for (var i = 0; i < objetos.length; i++) {
+		var objeto = objetos[i];
+
+		if (objeto.idPorta !== null) {
+			if (objeto.idPorta === objeto.portaCerta) {
+				objCertoPortaCerta++;
+			} else if (objeto.portaCerta !== null) {
+				objCerto++;
+			} else if (listaPortasCertas[objeto.idPorta]) {
+				portaCerta++;
+			}
+		}
+	}
+
+
+	var pontuacaoFase = criaPontuacaoFase(objetos.length, objCerto, portaCerta, objCertoPortaCerta);
+
 	pontuacao[numFase] = pontuacaoFase;
 
-	console.log(pontuacao);
+	console.log(pontuacaoFase);
 
 	return pontuacaoFase;
 }
@@ -42,9 +63,9 @@ function deveContinuar() {
 	} else {
 		var ultimasPontuacoes = pontuacao.slice(-3);
 
-		if (ultimasPontuacoes[0].matchesPerfeitos === 0
-				&& ultimasPontuacoes[1].matchesPerfeitos === 0
-				&& ultimasPontuacoes[2].matchesPerfeitos === 0) {
+		if (ultimasPontuacoes[0].objCertoPortaCerta === 0
+				&& ultimasPontuacoes[1].objCertoPortaCerta === 0
+				&& ultimasPontuacoes[2].objCertoPortaCerta === 0) {
 			return false;
 		} else {
 			return true;
