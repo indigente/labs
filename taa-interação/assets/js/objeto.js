@@ -31,17 +31,32 @@ function soltaObjeto(evt) {
   var objeto = evt.target;
   var idPorta = getPortaSobObjeto(objeto);
 
-  if (idPorta != null && idPorta >= 0 && portas[idPorta].idObjeto == null){
-    moveObjetoParaPorta(objeto, idPorta);
-  }
-  else {
+  if (idPorta === null || idPorta < 0) {
+    // soltou fora de qualquer porta
     moveObjetoParaCenario(objeto);
-  }  
+    adicionaBinding(objeto, null);
+  } else if (idPorta === objeto.idPorta) {
+    // soltou na mesma porta
+    moveObjetoParaPorta(objeto, idPorta);
+  } else if (portas[idPorta].idObjeto == null) {
+    // soltou em uma porta vazia
+    moveObjetoParaPorta(objeto, idPorta);
+    adicionaBinding(objeto, idPorta);
+  } else {
+    // soltou em uma porta ocupada por outro objeto
+    moveObjetoParaCenario(objeto);
+  }
 
-  adicionaBinding(objeto, idPorta);
+  if (todosOsObjetosForamPosicionados()) {
+    avancaFase();
+  }
 }
 
 function adicionaBinding(objeto, idPortaSobObjeto) {
+  if (objeto.idPorta == idPortaSobObjeto) {
+    return;
+  }
+
   // remove binding da porta anterior
   if (objeto.idPorta != null) {
     portas[objeto.idPorta].idObjeto = null;
