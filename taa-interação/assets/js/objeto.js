@@ -33,7 +33,6 @@ function soltaObjeto(evt) {
   var match = getPortaSobObjeto(evt.target)
   // check para ver se estou arrastrando sobre uma porta
   if(match!=-1 && portas[match].idObjeto == null){
-    document.getElementById('box').innerText = match;
     moveObjetoParaPorta(evt.target, match);
   }
   else {
