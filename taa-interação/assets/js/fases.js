@@ -151,7 +151,8 @@ function carregaFase(numFase) {
 }
 
 function encerraDemonstracao(numFase) {
-	setTimeout(function() { carregaFase(numFase) }, 500);
+	setTimeout(function() { mostraTelaEmBranco(); }, 500);
+	setTimeout(function() { mostraJogo(); carregaFase(numFase); }, 1500);
 }
 
 function demonstraFase(numFase) {
@@ -183,15 +184,16 @@ function getEspecificacaoFase(numFase) {
 }
 
 function gameOver() {
-  removeTodosOsObjetos();
+	mostraMensagem("msgfim");
+  // removeTodosOsObjetos();
 
-  var bg = new createjs.Shape();
-  bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width, stage.canvas.height);
-  stage.addChild(bg);
+  // var bg = new createjs.Shape();
+  // bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+  // stage.addChild(bg);
 
-  var text = new createjs.Text("Obrigado por participar!", "36px Arial", "#333");
-  text.textAlign = "center";
-  stage.addChild(text);
-  text.x = stage.canvas.width / 2;
-  text.y = stage.canvas.height / 2;
+  // var text = new createjs.Text("Obrigado por participar!", "36px Arial", "#333");
+  // text.textAlign = "center";
+  // stage.addChild(text);
+  // text.x = stage.canvas.width / 2;
+  // text.y = stage.canvas.height / 2;
 }

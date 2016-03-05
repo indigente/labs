@@ -1,0 +1,14 @@
+canvas {
+	width: 800px;
+	height: 600px;
+	border: black solid 1px;
+}
+
+.mensagem {
+	width: 800px;
+	height: 600px;
+	border: black solid 1px;
+
+	font-size: 20pt;
+	display: none;
+}
