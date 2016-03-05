@@ -5,20 +5,25 @@ function mudaIdioma(novoIdioma) {
 	idioma = novoIdioma;
 }
 
-function mostraTelaEmBranco() {
+function escondeTudo() {
 	$("#canvas").hide();
+	$(".mensagem").hide();
+}
+
+function mostraTelaEmBranco() {
+	escondeTudo();
 	$(".mensagem.embranco").show();
 	createjs.Ticker.setPaused(true);
 }
 
 function mostraMensagem(idMensagem) {
-	$("#canvas").hide();
+	escondeTudo();
 	$(".mensagem." + idioma + "." + idMensagem).show();
 	createjs.Ticker.setPaused(true);
 }
 
 function mostraJogo() {
-	$(".mensagem").hide();
+	escondeTudo();
 	$("#canvas").show();
 	createjs.Ticker.setPaused(false);
 }

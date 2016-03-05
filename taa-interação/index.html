@@ -16,6 +16,19 @@
 <div class="mensagem embranco">
 </div>
 
+<div class="mensagem pt msgload">
+  <p>Carregando...</p>
+  
+  <div class="progressbar"><div></div></div>
+</div>
+
+<div class="mensagem en msgload">
+  <p>Loading...</p>
+
+  <div class="progressbar"><div></div></div>
+</div>
+
+
 <div class="mensagem pt msgintro">
 	<p>Olá! Vamos arrumar o armário?</p>
 
@@ -73,6 +86,10 @@
   //objetos do jogo e portas
 
   function init(){
+    if (window.location.search === "?en") {
+      mudaIdioma("en");
+    }
+    mostraMensagem("msgload");
 
     // cria a cena para guardar os objetos na tela
     stage = new createjs.Stage("canvas");
@@ -90,10 +107,16 @@
     }
 
     loader = new createjs.LoadQueue(false);
+    loader.addEventListener("progress", handleProgress);
     loader.addEventListener("complete", handleComplete);
     loader.loadManifest(manifest, true, "assets/images/");
   }
 
+  function handleProgress() {
+    $('.progressbar>div').each(function(e) {
+      e.style.width = (loader.progress * 100) + "%";
+    });
+  }
 
   function handleComplete() {
     //mostra o fundo
@@ -107,9 +130,6 @@
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
 
-    if (window.location.search === "?en") {
-      mudaIdioma("en");
-    }
     mostraMensagem("msgintro");
   }
 </script>
