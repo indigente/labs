@@ -11,38 +11,46 @@ function qtdObjetosEmPortas() {
   return qtd;
 }
 
-// Retorna id da porta sob o objeto ou, se não existir, -1.
+// Retorna id da porta sob o objeto ou, se não existir, null.
 function getPortaSobObjeto(objeto) {
-  var match = -1;
+  var porta = null;
+
   for (var i = 0; i < 16 ; i++){
-    porta = portas[i];
-   
-    if (getIntersection(porta.topleft, objeto.getTransformedBounds())) {
-      match = i;
+    if (getIntersection(portas[i].topleft, objeto.getTransformedBounds())) {
+      porta = i;
       break;
     }
   }
-  return match;
+  return porta;
 }
 
 function soltaObjeto(evt) {
-  destacaPorta(-1);
-  // show back the cursor
+  destacaPorta(null);
   stage.canvas.style.cursor = "auto";
 
-  var match = getPortaSobObjeto(evt.target)
-  // check para ver se estou arrastrando sobre uma porta
-  if(match!=-1 && portas[match].idObjeto == null){
-    moveObjetoParaPorta(evt.target, match);
+  var objeto = evt.target;
+  var idPorta = getPortaSobObjeto(objeto);
+
+  if (idPorta != null && idPorta >= 0 && portas[idPorta].idObjeto == null){
+    moveObjetoParaPorta(objeto, idPorta);
   }
   else {
-    onObjetoPosicionado(evt.target, null);
-    createjs.Tween.get(evt.target).to(
-        {x: evt.target.iniX,
-         y: evt.target.iniY},
-        300,
-        createjs.Ease.getPowInOut(2));
+    moveObjetoParaCenario(objeto);
   }  
+
+  adicionaBinding(objeto, idPorta);
+}
+
+function adicionaBinding(objeto, idPortaSobObjeto) {
+  // remove binding da porta anterior
+  if (objeto.idPorta != null) {
+    portas[objeto.idPorta].idObjeto = null;
+  }
+  // adiciona binding da nova porta
+  objeto.idPorta = idPortaSobObjeto;
+  if (idPortaSobObjeto != null) {
+    portas[idPortaSobObjeto].idObjeto = objeto.idObjeto;
+  }
 }
 
 function getIntersection(rect1,rect2) {
@@ -116,8 +124,14 @@ function moveObjetoParaPorta(objeto, idPorta) {
        y: pos.y},
       300,
       createjs.Ease.getPowInOut(2));
+}
 
-  onObjetoPosicionado(objeto, idPorta);
+function moveObjetoParaCenario(objeto) {
+    createjs.Tween.get(objeto).to(
+        {x: objeto.iniX,
+         y: objeto.iniY},
+        300,
+        createjs.Ease.getPowInOut(2));
 }
 
 function animaObjeto(numFase, especificacao, numObjeto) {
@@ -153,16 +167,6 @@ function animaObjeto(numFase, especificacao, numObjeto) {
     .call(fechaPorta, [registro.idPorta])
     .wait(400)
     .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
-}
-
-function onObjetoPosicionado(objeto, idPorta) {
-  objeto.idPorta = idPorta;
-  if (idPorta != null) {
-    portas[idPorta].idObjeto = objeto.idObjeto;
-    if (todosOsObjetosForamPosicionados()) {
-      avancaFase();
-    }
-  }
 }
 
 function enviaObjetosParaOFundo() {

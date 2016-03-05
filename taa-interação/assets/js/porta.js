@@ -63,7 +63,7 @@ function inicializaPortas() {
       porta.regX = porta.width;
       porta.x += porta.getBounds().width;
     }
-    porta.objeto =  null;
+    porta.idObjeto =  null;
 
     portas[i] = porta;
   }
