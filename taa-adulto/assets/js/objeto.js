@@ -1,94 +1,191 @@
-var Objeto = (function () {
-    'use strict'
-    //Construtor da classe
-    function Objeto(stage, options, isDraggable) {
-        this.stage = stage;
-        this.options = options;
-        this.options.async = this.options.async === undefined ? true : this.options.async;
-        this.options.scaleX = this.options.scaleX || 1; 
-        this.options.scaleY = this.options.scaleY || 1;
-        this.bitmapObjectIsLoad = false; 
-        this.isDraggable = isDraggable || false;
-        this.carregaObjeto();
-    }
-    Objeto.prototype.arrastaObjeto = function(evt) {
-        evt.target.x = evt.stageX - evt.target.getBounds().width * evt.target.scaleX / 2;
-        evt.target.y = evt.stageY - evt.target.getBounds().height * evt.target.scaleY / 2;
-    };
-    Objeto.prototype.carregaBitmap = function() {
-        if(this.options.async){
-            this.bitmapObject = new createjs.Bitmap("assets/images/" + this.options.src);
-            carregaBMP(this);
-            this.bitmapObjectIsLoad = true;
-        }else{
-            var self = this;
-            var image = new Image();
-            image.src = "assets/images/" + self.options.src;
-            image.onload = handleImageLoad;
-            function handleImageLoad(){
-                self.bitmapObject = new createjs.Bitmap(image);
-                self.bitmapObjectIsLoad = true;
-                carregaBMP(self);
-            }
-        }
-    };
-    Objeto.prototype.carregaObjeto = function() {
-        this.carregaBitmap(this.stage, this.options.src, this.options.x || 0, this.options.y || 0);
-    };
-    Objeto.prototype.draggable = function(){
-        if(this.isDraggable){
-            this.bitmapObject.addEventListener("pressmove", this.arrastaObjeto);
-        }
-    };
-    Objeto.prototype.drawByCenter = function(){
-        this.bitmapObject.x -= this.bitmapObject.getBounds().width * this.bitmapObject.scaleX / 2;
-        this.bitmapObject.y -= this.bitmapObject.getBounds().height * this.bitmapObject.scaleY / 2;
-    };
-    Objeto.prototype.startAnimate = function(from, nivel, to, atual, max){
-        var self = this;
-        if(!self.async){
-            var timer = 0;
-            var id = setInterval(function(){ 
-                if(timer > 5 || self.bitmapObjectIsLoad){
-                    clearInterval(id);
-                    if(self.bitmapObjectIsLoad){
-                        self.animate(self.bitmapObject, from, nivel, to, atual, max);                
-                    }
-                }
-                timer++;
-            }, 1000);
-        }
-    }
-    Objeto.prototype.animate = function(target, from, nivel, to, atual, max){
-        var self = this;
-        var scaleX = 0.5;
-        var scaleY = 0.5;
-        createjs.Tween.get(target)
-                .to({alpha: 1.0},500)
-                .to({scaleX: scaleX, scaleY: scaleY, x: to[nivel.porta[atual]].x - self.bitmapObject.getBounds().width * scaleX / 2, y: to[nivel.porta[atual]].y - self.bitmapObject.getBounds().height * scaleY / 2},2000)
-                .to({alpha: 0.0},1000)
-                .to({scaleX: self.options.scaleX, scaleY: self.options.scaleY, x: from.x - self.bitmapObject.getBounds().width * self.bitmapObject.scaleX / 2, y: from.y - self.bitmapObject.getBounds().height * self.bitmapObject.scaleY / 2})
-                .call(nextAnimate);
-        function nextAnimate(){
-            if(atual + 1 < max){
-                self.animate(target, from, nivel, to, atual + 1, max);
-            }
-        }
-    };
-    //Metodo privado da classe
-    function carregaBMP(parent){
-        parent.bitmapObject.scaleX = parent.options.scaleX || 1;
-        parent.bitmapObject.scaleY = parent.options.scaleY || 1;
-        parent.bitmapObject.x = parent.options.x;
-        parent.bitmapObject.y = parent.options.y;
-        parent.stage.addChild(parent.bitmapObject);
-        if(parent.isDraggable){
-            parent.draggable();
-        }
-        if(parent.options.drawByCenter){
-            parent.drawByCenter();
-        }
-    }
-    return Objeto;
-})();
+var objetos = [];
+var qtdObjetosPosicionados = 0;
 
+function qtdObjetosEmPortas() {
+  var qtd = 0;
+  for (var i = 0; i < objetos.length; i++) {
+    if (objetos[i].idPorta != null) {
+      qtd++;
+    }
+  }
+  return qtd;
+}
+
+// Retorna id da porta sob o objeto ou, se não existir, null.
+function getPortaSobObjeto(objeto) {
+  var porta = null;
+
+  for (var i = 0; i < 16 ; i++){
+    if (getIntersection(portas[i].topleft, objeto.getTransformedBounds())) {
+      porta = i;
+      break;
+    }
+  }
+  return porta;
+}
+
+function soltaObjeto(evt) {
+  destacaPorta(null);
+  stage.canvas.style.cursor = "auto";
+
+  var objeto = evt.target;
+  var idPorta = getPortaSobObjeto(objeto);
+
+  if (idPorta === null || idPorta < 0) {
+    // soltou fora de qualquer porta
+    moveObjetoParaCenario(objeto);
+    adicionaBinding(objeto, null);
+  } else if (idPorta === objeto.idPorta) {
+    // soltou na mesma porta
+    moveObjetoParaPorta(objeto, idPorta);
+  } else if (portas[idPorta].idObjeto == null) {
+    // soltou em uma porta vazia
+    moveObjetoParaPorta(objeto, idPorta);
+    adicionaBinding(objeto, idPorta);
+  } else {
+    // soltou em uma porta ocupada por outro objeto
+    moveObjetoParaCenario(objeto);
+  }
+
+  if (todosOsObjetosForamPosicionados()) {
+    avancaFase();
+  }
+}
+
+function adicionaBinding(objeto, idPortaSobObjeto) {
+  if (objeto.idPorta == idPortaSobObjeto) {
+    return;
+  }
+
+  // remove binding da porta anterior
+  if (objeto.idPorta != null) {
+    portas[objeto.idPorta].idObjeto = null;
+  }
+  // adiciona binding da nova porta
+  objeto.idPorta = idPortaSobObjeto;
+  if (idPortaSobObjeto != null) {
+    portas[idPortaSobObjeto].idObjeto = objeto.idObjeto;
+  }
+}
+
+function getIntersection(rect1,rect2) {
+    if ( rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height || rect1.y + rect1.height <= rect2.y ) return false;
+    return true;
+}
+
+function removeObjeto(objeto) {
+  var idObjeto = objeto.idObjeto;
+  var indice = objetos.indexOf(idObjeto);
+  objetos.splice(indice, 1);
+  stage.removeChild(objeto);
+}
+
+function removeTodosOsObjetos() {
+  for (var i = objetos.length - 1; i >= 0; i--) {
+    removeObjeto(objetos[i]);
+  };
+}
+
+function adicionaObjeto(idObjeto, idPorta) {
+  var objeto = new createjs.Bitmap(loader.getResult("objeto" + idObjeto));
+  objeto.portaCerta = idPorta;
+  objeto.idPorta = null;
+  objeto.idObjeto = idObjeto;
+  objeto.offX = 0;
+  objeto.offY = 0;
+  
+  objeto.scaleX = objeto.scaleY = .5;
+  objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
+  objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
+
+  objeto.on("mousedown", function(evt){
+    this.parent.addChild(this);
+    this.offX = this.x - evt.stageX;
+    this.offY = this.y - evt.stageY;
+  });
+
+  objeto.on("pressmove", function(evt){
+    stage.canvas.style.cursor = "none";
+    this.x = evt.stageX + this.offX;
+    this.y = evt.stageY + this.offY;
+    var match = getPortaSobObjeto(evt.target);
+    destacaPorta(match);
+  });
+
+  objeto.addEventListener("pressup", soltaObjeto);
+
+  return objeto;
+}
+
+function todosOsObjetosForamPosicionados() {
+  return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];  
+}
+
+function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
+  var porta = portas[idPorta];
+  var portax = porta.topleft.x + porta.getBounds().width / 2;
+  var portay = porta.topleft.y + porta.getBounds().height / 2;
+
+  var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
+  var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
+
+  return {x: finalx, y: finaly};  
+}
+
+function moveObjetoParaPorta(objeto, idPorta) {
+  var pos = getPosicaoDoObjetoNaPorta(objeto, idPorta);
+  createjs.Tween.get(objeto).to(
+      {x: pos.x,
+       y: pos.y},
+      300,
+      createjs.Ease.getPowInOut(2));
+}
+
+function moveObjetoParaCenario(objeto) {
+    createjs.Tween.get(objeto).to(
+        {x: objeto.iniX,
+         y: objeto.iniY},
+        300,
+        createjs.Ease.getPowInOut(2));
+}
+
+function animaObjeto(numFase, especificacao, numObjeto) {
+  if (numObjeto >= especificacao.length) {
+    encerraDemonstracao(numFase);
+    return;
+  }
+  var registro = especificacao[numObjeto];
+
+  var objeto = new createjs.Bitmap(loader.getResult("objeto" + registro.idObjeto));
+  objetos.push(objeto);
+  stage.addChild(objeto);
+  objeto.scaleX = 0.5;
+  objeto.scaleY = 0.5;
+  var posFinal = getPosicaoDoObjetoNaPorta(objeto, registro.idPorta);
+
+  objeto.x = (stage.canvas.width - objeto.getBounds().width) / 2;
+  objeto.y = (stage.canvas.height - objeto.getBounds().height) / 2;
+  objeto.scaleX = 1.0;
+  objeto.scaleY = 1.0;
+
+  createjs.Tween.get(objeto)
+    .call(abrePorta, [registro.idPorta])
+    .wait(500)
+    .to({
+        scaleX: 0.5,
+        scaleY: 0.5,
+        x: posFinal.x,
+        y: posFinal.y},
+        1000)
+    .wait(100)
+    .call(function() {stage.addChildAt(objeto, 1); })
+    .call(fechaPorta, [registro.idPorta])
+    .wait(400)
+    .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
+}
+
+function enviaObjetosParaOFundo() {
+	for (var i = 0; i < objetos.length; i++) {
+		stage.addChildAt(objetos[i], 1);
+	}
+}
