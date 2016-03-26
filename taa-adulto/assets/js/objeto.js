@@ -1,6 +1,13 @@
 var objetos = [];
 var qtdObjetosPosicionados = 0;
 
+function carregaBitmapDoObjeto(idObjeto) {
+  var objeto = new createjs.Bitmap(loader.getResult("images")),
+    coords = objetoCoords.frames["objeto" + idObjeto + ".png"].frame;
+  objeto.sourceRect = new createjs.Rectangle(-coords.x, -coords.y, coords.w, coords.h);;
+  return objeto;
+}
+
 function qtdObjetosEmPortas() {
   var qtd = 0;
   for (var i = 0; i < objetos.length; i++) {
@@ -87,7 +94,7 @@ function removeTodosOsObjetos() {
 }
 
 function adicionaObjeto(idObjeto, idPorta) {
-  var objeto = new createjs.Bitmap(loader.getResult("objeto" + idObjeto));
+  var objeto = carregaBitmapDoObjeto(idObjeto);
   objeto.portaCerta = idPorta;
   objeto.idPorta = null;
   objeto.idObjeto = idObjeto;
@@ -156,7 +163,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
   }
   var registro = especificacao[numObjeto];
 
-  var objeto = new createjs.Bitmap(loader.getResult("objeto" + registro.idObjeto));
+  var objeto = carregaBitmapDoObjeto(registro.idObjeto);
   objetos.push(objeto);
   stage.addChild(objeto);
   objeto.scaleX = 0.5;

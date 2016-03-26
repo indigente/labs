@@ -5,6 +5,7 @@
   <title>Teste de Arrumação do Armário</title>
   <link rel="stylesheet" type="text/css" href="assets/css/game.css" />
   <script type="text/javascript" src="assets/js/fases.js"></script>
+  <script type="text/javascript" src="assets/js/objetocoords.js"></script>
   <script type="text/javascript" src="assets/js/objeto.js"></script>
   <script type="text/javascript" src="assets/js/porta.js"></script>
   <script type="text/javascript" src="assets/js/pontuacao.js"></script>
@@ -121,11 +122,8 @@
     manifest = [
       {src: "cozinha.jpg", id: "cozinha"},
       {src: "porta.png", id: "porta"},
+      {src: "images.png", id: "images"}
     ];
-
-    for (var i = 1; i <= 40; i++) {
-      manifest.push({src: "objeto" + i + ".png", id: "objeto" + i});
-    }
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener("progress", handleProgress);
