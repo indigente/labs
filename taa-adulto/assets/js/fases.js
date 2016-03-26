@@ -128,6 +128,26 @@ function avancaFase() {
   tempoParaFecharPorta);
 }
 
+function definePosicaoInicialDosObjetos() {
+  var center = {x: stage.canvas.width / 2, y: stage.canvas.height / 2},
+    semiwidth = 50,
+    semiheight = 40,
+    ncols = objetos.length / 2,
+    x1 = center.x - ((ncols - 1) * semiwidth),
+    y1 = center.y - semiheight - 30,
+    objeto;
+
+  for (i = 0; i < ncols; i++) {
+    objeto = objetos[i];
+    objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
+    objeto.y = objeto.iniY = y1 - (objeto.getBounds().height / 4);
+
+    objeto = objetos[ncols + i];
+    objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
+    objeto.y = objeto.iniY = y1 + 2 * semiheight - (objeto.getBounds().height / 4);
+  }
+}
+
 // numFase: de 0 a 17
 function carregaFase(numFase) {
   qtdObjetosPosicionados = 0;
@@ -144,6 +164,8 @@ function carregaFase(numFase) {
     objetos.push(objeto);
     objetos.push(outro);    
   }
+
+  definePosicaoInicialDosObjetos();
 
   for (var i = 0; i < objetos.length; i++) {
     stage.addChild(objetos[i]);

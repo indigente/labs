@@ -171,7 +171,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
   var posFinal = getPosicaoDoObjetoNaPorta(objeto, registro.idPorta);
 
   objeto.x = (stage.canvas.width - objeto.getBounds().width) / 2;
-  objeto.y = (stage.canvas.height - objeto.getBounds().height) / 2;
+  objeto.y = (stage.canvas.height - objeto.getBounds().height) / 2 - 30;
   objeto.scaleX = 1.0;
   objeto.scaleY = 1.0;
 
