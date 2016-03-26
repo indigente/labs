@@ -10,6 +10,15 @@ function export {
 	inkscape --without-gui --export-area-drawing --export-dpi=$DPI --export-png=build/images/objeto$2.png ./svg/$1.svg
 }
 
+
+mkdir -p build/images
+mkdir -p build/outros
+
+inkscape --without-gui --export-area-drawing -h 600 --export-png=build/outros/cozinha.png ./svg/229.svg
+convert build/outros/cozinha.png build/outros/cozinha.jpg
+
+inkscape --without-gui --export-area-drawing --export-dpi=90 --export-png=build/outros/porta.png ./svg/porta.svg
+
 export 108 1	# xicara
 export 110 2	# uva
 export 112 3	# torta
