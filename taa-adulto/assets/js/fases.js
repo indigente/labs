@@ -1,3 +1,4 @@
+rng = new RNG(1); // random number generator
 var faseAtual = 0; // de 0 a 17
 const MAX_FASE = 8;
 var qtdObjetosPorFase = [
@@ -128,6 +129,20 @@ function avancaFase() {
   tempoParaFecharPorta);
 }
 
+function embaralhaObjetos() {
+  function shuffle(a) {
+    var j, x, i;
+    for (i = a.length; i; i -= 1) {
+        j = Math.floor(rng.uniform() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
+  }
+
+  shuffle(objetos);
+}
+
 function definePosicaoInicialDosObjetos() {
   var center = {x: stage.canvas.width / 2, y: stage.canvas.height / 2},
     semiwidth = 50,
@@ -165,6 +180,7 @@ function carregaFase(numFase) {
     objetos.push(outro);    
   }
 
+  embaralhaObjetos();
   definePosicaoInicialDosObjetos();
 
   for (var i = 0; i < objetos.length; i++) {
