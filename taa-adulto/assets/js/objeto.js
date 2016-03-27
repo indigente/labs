@@ -3,8 +3,15 @@ var qtdObjetosPosicionados = 0;
 
 function carregaBitmapDoObjeto(idObjeto) {
   var objeto = new createjs.Bitmap(loader.getResult("images")),
-    coords = objetoCoords.frames["objeto" + idObjeto + ".png"].frame;
+    coords = objetoCoords.frames["objeto" + idObjeto + ".png"].frame,
+    hit;
+
   objeto.sourceRect = new createjs.Rectangle(-coords.x, -coords.y, coords.w, coords.h);;
+
+  hit = new createjs.Shape();
+  hit.graphics.beginFill("#000").drawRect(0, 0, coords.w, coords.h);
+  objeto.hitArea = hit;
+
   return objeto;
 }
 
