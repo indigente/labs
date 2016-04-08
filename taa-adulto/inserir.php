@@ -40,16 +40,19 @@
 		
 //		$sql = "INSERT INTO neandertaa (nome,edade,escola,nascimento,sexo,trial1_3O,trial1_3L,trial1_3OL)
 //				VALUES ('$nome',$edade,'$escola','$nascimento','$sexo',$trial1_3O,$trial1_3L,$trial1_3OL);";
-        $sql = "INSERT INTO neandertaa (trial1_3O,trial1_3L,trial1_3OL)
-				VALUES ($trial1_3O,$trial1_3L,$trial1_3OL);";
-		$result = mysqli_query($conn,$sql);
+
+        $sql = $conn->prepare("INSERT INTO neandertaa (trial1_3O,trial1_3L,trial1_3OL)
+				VALUES (?, ?, ?);");
+		$sql->bind_param("iii", $trial1_3O, $trial1_3L, $trial1_3OL);
+
+		$result = $sql->execute();//mysqli_query($conn,$sql);
 
 		if($result)
         	echo "Jogador inserido!";
         else
         	echo "Jogador NÃO inserido!";
 
-		mysqli_free_result($result);
+		$sql->close();
 		mysqli_close($conn);
 	 ?>
 
