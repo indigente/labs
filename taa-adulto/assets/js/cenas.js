@@ -1,3 +1,6 @@
+/*jslint browser: true, indent: 2*/
+/*global $*/
+
 var idioma = "pt"; // alternativa: en
 
 

@@ -1,6 +1,9 @@
-rng = new RNG(1); // random number generator
+/*jslint browser: true, indent: 2*/
+/*global RNG*/
+
+var rng = new RNG(1); // random number generator
 var faseAtual = 0; // de 0 a 17
-const MAX_FASE = 8;
+var MAX_FASE = 8;
 var qtdObjetosPorFase = [
   3, 3, 3,
   4, 4, 4,

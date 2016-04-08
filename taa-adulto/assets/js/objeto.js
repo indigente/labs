@@ -1,3 +1,5 @@
+/*jslint browser: true, indent: 2*/
+/*global createjs,loader*/
 var objetos = [];
 var qtdObjetosPosicionados = 0;
 

@@ -1,3 +1,5 @@
+/*jslint browser: true, indent: 2*/
+/*global stage,loader,createjs,calculaSkewPorta*/
 var portas = [];
 var posicoesPortas = {
   x: [32, 167, 488, 623],
@@ -7,8 +9,9 @@ var posicoesPortas = {
 
 // TODO: call callback
 function abrePorta(idPorta, callback) {
-  var finalSkewY = calculaSkewPorta(idPorta);
-  var porta = portas[idPorta];
+  'use strict';
+  var finalSkewY = calculaSkewPorta(idPorta),
+    porta = portas[idPorta];
   createjs.Tween.get(porta)
     .to({
       skewY: 0,
@@ -27,15 +30,18 @@ function abrePorta(idPorta, callback) {
 }
 
 function abreTodasAsPortas() {
-  for (var i = 0; i < portas.length; i++) {
+  'use strict';
+  var i;
+  for (i = 0; i < portas.length; i += 1) {
     abrePorta(i);
   }
 }
 
 // TODO: call callback
 function fechaPorta(idPorta, callback) {
-  var finalSkewY = calculaSkewPorta(idPorta);
-  var porta = portas[idPorta];
+  'use strict';
+  var finalSkewY = calculaSkewPorta(idPorta),
+    porta = portas[idPorta];
   createjs.Tween.get(porta)
     .to({
       skewY: -finalSkewY,
@@ -51,25 +57,33 @@ function fechaPorta(idPorta, callback) {
 }
 
 function fechaTodasAsPortas() {
-  for (var i = 0; i < portas.length; i++) {
+  'use strict';
+  var i;
+  for (i = 0; i < portas.length; i += 1) {
     fechaPorta(i);
   }
 }
 
 function destacaPorta(idPorta) {
-  for (var i = 0; i < portas.length; i++) {
-    portas[i].alpha = (i == idPorta ? 0.5 : 1.0);
+  'use strict';
+  var i;
+  for (i = 0; i < portas.length; i += 1) {
+    portas[i].alpha = (i === idPorta ? 0.5 : 1.0);
   }
 }
 
 function inicializaPortas() {
+  'use strict';
   // as portas de baixo devem ser desenhadas de baixo pra cima, pois na
   // animação de abrir porta, a imagem da porta de cima deve passar sobre
   // a imagem da porta de baixo.
-  var ordemPortas = [0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8];
-  for (var j = 0; j < ordemPortas.length; j++) {
-    var i = ordemPortas[j];
-    var porta = new createjs.Bitmap(loader.getResult("porta"));
+  var j,
+    i,
+    porta,
+    ordemPortas = [0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8];
+  for (j = 0; j < ordemPortas.length; j += 1) {
+    i = ordemPortas[j];
+    porta = new createjs.Bitmap(loader.getResult("porta"));
     stage.addChild(porta);
 
     porta.topleft = {
@@ -80,7 +94,7 @@ function inicializaPortas() {
     porta.topleft.y = porta.y = posicoesPortas.y[Math.floor(i / 4)];
     porta.topleft.width = porta.width = porta.getBounds().width;
     porta.topleft.height = porta.height = porta.getBounds().height;
-    if (i % 2 == 1) {
+    if (i % 2 === 1) {
       porta.regX = porta.width;
       porta.x += porta.getBounds().width;
     }
@@ -91,14 +105,17 @@ function inicializaPortas() {
 }
 
 function limpaTodasAsPortas() {
-  for (var i = 0; i < portas.length; i++) {
+  'use strict';
+  var i;
+  for (i = 0; i < portas.length; i += 1) {
     portas[i].idObjeto = null;
   }
 }
 
 function calculaSkewPorta(idPorta) {
+  'use strict';
   var finalSkewY = (idPorta < 8 ? -20 : 20);
-  if (idPorta % 2 == 1) {
+  if (idPorta % 2 === 1) {
     finalSkewY = -finalSkewY;
   }
   return finalSkewY;

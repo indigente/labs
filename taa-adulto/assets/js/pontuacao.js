@@ -1,6 +1,9 @@
+/*jslint browser: true, indent: 2*/
+
 var pontuacao = [];
 
 function criaPontuacaoFase(totalObjetos, objCerto, portaCerta, objCertoPortaCerta) {
+  'use strict';
   var p = {};
   p.totalObjetos = totalObjetos;
   p.objCerto = objCerto;
@@ -15,21 +18,24 @@ function criaPontuacaoFase(totalObjetos, objCerto, portaCerta, objCertoPortaCert
  * pelo jogador, determina quantos pontos o jogador fez.
  */
 function calculaPontuacaoFase(numFase, objetos) {
+  'use strict';
   // objeto: portaCerta, idPorta, idObjeto
 
-  var objCertoPortaCerta = 0;
-  var objCerto = 0;
-  var portaCerta = 0;
-
-  var listaPortasCertas = {};
-  for (var i = 0; i < objetos.length; i++) {
-    var objeto = objetos[i];
+  var objCertoPortaCerta = 0,
+    objCerto = 0,
+    portaCerta = 0,
+    listaPortasCertas = {},
+    objeto,
+    i;
+  
+  for (i = 0; i < objetos.length; i += 1) {
+    objeto = objetos[i];
     if (objeto.portaCerta !== null) {
       listaPortasCertas[objeto.portaCerta] = true;
     }
   }
 
-  for (var i = 0; i < objetos.length; i++) {
+  for (i = 0; i < objetos.length; i += 1) {
     var objeto = objetos[i];
 
     if (objeto.idPorta !== null) {
