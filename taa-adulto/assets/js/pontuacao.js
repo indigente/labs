@@ -1,4 +1,5 @@
 /*jslint browser: true, indent: 2*/
+/*global console*/
 
 var pontuacao = [];
 
@@ -26,7 +27,8 @@ function calculaPontuacaoFase(numFase, objetos) {
     portaCerta = 0,
     listaPortasCertas = {},
     objeto,
-    i;
+    i,
+    pontuacaoFase;
   
   for (i = 0; i < objetos.length; i += 1) {
     objeto = objetos[i];
@@ -36,21 +38,21 @@ function calculaPontuacaoFase(numFase, objetos) {
   }
 
   for (i = 0; i < objetos.length; i += 1) {
-    var objeto = objetos[i];
+    objeto = objetos[i];
 
     if (objeto.idPorta !== null) {
       if (objeto.idPorta === objeto.portaCerta) {
-        objCertoPortaCerta++;
+        objCertoPortaCerta += 1;
       } else if (objeto.portaCerta !== null) {
-        objCerto++;
+        objCerto += 1;
       } else if (listaPortasCertas[objeto.idPorta]) {
-        portaCerta++;
+        portaCerta += 1;
       }
     }
   }
 
 
-  var pontuacaoFase = criaPontuacaoFase(objetos.length, objCerto, portaCerta, objCertoPortaCerta);
+  pontuacaoFase = criaPontuacaoFase(objetos.length, objCerto, portaCerta, objCertoPortaCerta);
 
   pontuacao[numFase] = pontuacaoFase;
 
@@ -64,14 +66,15 @@ function calculaPontuacaoFase(numFase, objetos) {
  * se o jogo deve continuar.
  */
 function deveContinuar() {
+  'use strict';
   if (pontuacao.length < 3) {
     return true;
   } else {
     var ultimasPontuacoes = pontuacao.slice(-3);
 
     if (ultimasPontuacoes[0].objCertoPortaCerta === 0 &&
-      ultimasPontuacoes[1].objCertoPortaCerta === 0 &&
-      ultimasPontuacoes[2].objCertoPortaCerta === 0) {
+        ultimasPontuacoes[1].objCertoPortaCerta === 0 &&
+        ultimasPontuacoes[2].objCertoPortaCerta === 0) {
       return false;
     } else {
       return true;

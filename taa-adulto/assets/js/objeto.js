@@ -4,11 +4,12 @@ var objetos = [];
 var qtdObjetosPosicionados = 0;
 
 function carregaBitmapDoObjeto(idObjeto) {
+  'use strict';
   var objeto = new createjs.Bitmap(loader.getResult("images")),
     coords = objetoCoords.frames["objeto" + idObjeto + ".png"].frame,
     hit;
 
-  objeto.sourceRect = new createjs.Rectangle(-coords.x, -coords.y, coords.w, coords.h);;
+  objeto.sourceRect = new createjs.Rectangle(-coords.x, -coords.y, coords.w, coords.h);
 
   hit = new createjs.Shape();
   hit.graphics.beginFill("#000").drawRect(0, 0, coords.w, coords.h);
@@ -18,10 +19,11 @@ function carregaBitmapDoObjeto(idObjeto) {
 }
 
 function qtdObjetosEmPortas() {
-  var qtd = 0;
-  for (var i = 0; i < objetos.length; i++) {
-    if (objetos[i].idPorta != null) {
-      qtd++;
+  'use strict';
+  var i, qtd = 0;
+  for (i = 0; i < objetos.length; i += 1) {
+    if (objetos[i].idPorta !== null) {
+      qtd += 1;
     }
   }
   return qtd;
@@ -29,9 +31,10 @@ function qtdObjetosEmPortas() {
 
 // Retorna id da porta sob o objeto ou, se não existir, null.
 function getPortaSobObjeto(objeto) {
-  var porta = null;
+  'use strict';
+  var i, porta = null;
 
-  for (var i = 0; i < 16; i++) {
+  for (i = 0; i < 16; i += 1) {
     if (getIntersection(portas[i].topleft, objeto.getTransformedBounds())) {
       porta = i;
       break;
@@ -41,6 +44,7 @@ function getPortaSobObjeto(objeto) {
 }
 
 function soltaObjeto(evt) {
+  'use strict';
   destacaPorta(null);
   stage.canvas.style.cursor = "auto";
 
