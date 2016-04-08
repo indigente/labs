@@ -29,7 +29,7 @@ function qtdObjetosEmPortas() {
 function getPortaSobObjeto(objeto) {
   var porta = null;
 
-  for (var i = 0; i < 16 ; i++){
+  for (var i = 0; i < 16; i++) {
     if (getIntersection(portas[i].topleft, objeto.getTransformedBounds())) {
       porta = i;
       break;
@@ -82,9 +82,9 @@ function adicionaBinding(objeto, idPortaSobObjeto) {
   }
 }
 
-function getIntersection(rect1,rect2) {
-    if ( rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height || rect1.y + rect1.height <= rect2.y ) return false;
-    return true;
+function getIntersection(rect1, rect2) {
+  if (rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height || rect1.y + rect1.height <= rect2.y) return false;
+  return true;
 }
 
 function removeObjeto(objeto) {
@@ -107,18 +107,18 @@ function adicionaObjeto(idObjeto, idPorta) {
   objeto.idObjeto = idObjeto;
   objeto.offX = 0;
   objeto.offY = 0;
-  
+
   objeto.scaleX = objeto.scaleY = .5;
   objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
   objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
 
-  objeto.on("mousedown", function(evt){
+  objeto.on("mousedown", function(evt) {
     this.parent.addChild(this);
     this.offX = this.x - evt.stageX;
     this.offY = this.y - evt.stageY;
   });
 
-  objeto.on("pressmove", function(evt){
+  objeto.on("pressmove", function(evt) {
     stage.canvas.style.cursor = "none";
     this.x = evt.stageX + this.offX;
     this.y = evt.stageY + this.offY;
@@ -132,7 +132,7 @@ function adicionaObjeto(idObjeto, idPorta) {
 }
 
 function todosOsObjetosForamPosicionados() {
-  return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];  
+  return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];
 }
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
@@ -143,24 +143,29 @@ function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
   var finalx = portax - objeto.getBounds().width * objeto.scaleX / 2;
   var finaly = portay - objeto.getBounds().height * objeto.scaleY / 2;
 
-  return {x: finalx, y: finaly};  
+  return {
+    x: finalx,
+    y: finaly
+  };
 }
 
 function moveObjetoParaPorta(objeto, idPorta) {
   var pos = getPosicaoDoObjetoNaPorta(objeto, idPorta);
-  createjs.Tween.get(objeto).to(
-      {x: pos.x,
-       y: pos.y},
-      300,
-      createjs.Ease.getPowInOut(2));
+  createjs.Tween.get(objeto).to({
+      x: pos.x,
+      y: pos.y
+    },
+    300,
+    createjs.Ease.getPowInOut(2));
 }
 
 function moveObjetoParaCenario(objeto) {
-    createjs.Tween.get(objeto).to(
-        {x: objeto.iniX,
-         y: objeto.iniY},
-        300,
-        createjs.Ease.getPowInOut(2));
+  createjs.Tween.get(objeto).to({
+      x: objeto.iniX,
+      y: objeto.iniY
+    },
+    300,
+    createjs.Ease.getPowInOut(2));
 }
 
 function animaObjeto(numFase, especificacao, numObjeto) {
@@ -189,17 +194,20 @@ function animaObjeto(numFase, especificacao, numObjeto) {
         scaleX: 0.5,
         scaleY: 0.5,
         x: posFinal.x,
-        y: posFinal.y},
-        1000)
+        y: posFinal.y
+      },
+      1000)
     .wait(100)
-    .call(function() {stage.addChildAt(objeto, 1); })
+    .call(function() {
+      stage.addChildAt(objeto, 1);
+    })
     .call(fechaPorta, [registro.idPorta])
     .wait(400)
     .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
 }
 
 function enviaObjetosParaOFundo() {
-	for (var i = 0; i < objetos.length; i++) {
-		stage.addChildAt(objetos[i], 1);
-	}
+  for (var i = 0; i < objetos.length; i++) {
+    stage.addChildAt(objetos[i], 1);
+  }
 }

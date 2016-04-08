@@ -1,8 +1,8 @@
 var portas = [];
 var posicoesPortas = {
-    x: [32, 167, 488, 623],
-    y: [5, 85, 413, 493]
-  };
+  x: [32, 167, 488, 623],
+  y: [5, 85, 413, 493]
+};
 
 
 // TODO: call callback
@@ -10,10 +10,20 @@ function abrePorta(idPorta, callback) {
   var finalSkewY = calculaSkewPorta(idPorta);
   var porta = portas[idPorta];
   createjs.Tween.get(porta)
-    .to({skewY: 0, scaleX: 1}, 0)
-    .to({skewY: finalSkewY, scaleX: 0}, 300)
-    .to({skewY: -finalSkewY}, 0)
-    .to({scaleX: -0.2}, 100);
+    .to({
+      skewY: 0,
+      scaleX: 1
+    }, 0)
+    .to({
+      skewY: finalSkewY,
+      scaleX: 0
+    }, 300)
+    .to({
+      skewY: -finalSkewY
+    }, 0)
+    .to({
+      scaleX: -0.2
+    }, 100);
 }
 
 function abreTodasAsPortas() {
@@ -27,9 +37,17 @@ function fechaPorta(idPorta, callback) {
   var finalSkewY = calculaSkewPorta(idPorta);
   var porta = portas[idPorta];
   createjs.Tween.get(porta)
-    .to({skewY: -finalSkewY, scaleX: 0}, 100)
-    .to({skewY: finalSkewY}, 0)
-    .to({skewY: 0, scaleX: 1}, 300);
+    .to({
+      skewY: -finalSkewY,
+      scaleX: 0
+    }, 100)
+    .to({
+      skewY: finalSkewY
+    }, 0)
+    .to({
+      skewY: 0,
+      scaleX: 1
+    }, 300);
 }
 
 function fechaTodasAsPortas() {
@@ -54,16 +72,19 @@ function inicializaPortas() {
     var porta = new createjs.Bitmap(loader.getResult("porta"));
     stage.addChild(porta);
 
-    porta.topleft = {x: 0, y: 0};
-    porta.topleft.x = porta.x = posicoesPortas.x[i%4];
-    porta.topleft.y = porta.y = posicoesPortas.y[Math.floor(i/4)];
+    porta.topleft = {
+      x: 0,
+      y: 0
+    };
+    porta.topleft.x = porta.x = posicoesPortas.x[i % 4];
+    porta.topleft.y = porta.y = posicoesPortas.y[Math.floor(i / 4)];
     porta.topleft.width = porta.width = porta.getBounds().width;
     porta.topleft.height = porta.height = porta.getBounds().height;
     if (i % 2 == 1) {
       porta.regX = porta.width;
       porta.x += porta.getBounds().width;
     }
-    porta.idObjeto =  null;
+    porta.idObjeto = null;
 
     portas[i] = porta;
   }
