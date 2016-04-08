@@ -1,5 +1,5 @@
 /*jslint browser: true, indent: 2*/
-/*global RNG*/
+/*global RNG,stage,calculaPontuacaoFase,objetos,enviaObjetosParaOFundo,fechaTodasAsPortas,deveContinuar,removeTodosOsObjetos,limpaTodasAsPortas,abreTodasAsPortas,adicionaObjeto,mostraTelaEmBranco,mostraJogo,animaObjeto,mostraMensagem*/
 
 var rng = new RNG(1); // random number generator
 var faseAtual = 0; // de 0 a 17
@@ -117,26 +117,76 @@ var dadosFase = [
 // 9 , 9 , 6 , 
 // 1 , 35 , 27];
 
+function getEspecificacaoFase(numFase) {
+  'use strict';
+  var especificacao = [],
+    indice = 0,
+    i;
+
+  indice = 0;
+  for (i = 0; i < numFase; i += 1) {
+    indice += qtdObjetosPorFase[i] * 3;
+  }
+
+  for (i = indice; i <= indice + 3 * (qtdObjetosPorFase[numFase] - 1); i += 3) {
+    especificacao.push({
+      idPorta: dadosFase[i] - 1,
+      idObjeto: dadosFase[i + 1],
+      idOutroObjeto: dadosFase[i + 2]
+    });
+  }
+
+  return especificacao;
+}
+
+function demonstraFase(numFase) {
+  'use strict';
+//  qtdObjetosPosicionados = 0;
+  removeTodosOsObjetos();
+  limpaTodasAsPortas();
+
+  var especificacao = getEspecificacaoFase(numFase);
+
+  animaObjeto(numFase, especificacao, 0);
+}
+
+function gameOver() {
+  'use strict';
+  mostraMensagem("msgfim");
+  // removeTodosOsObjetos();
+
+  // var bg = new createjs.Shape();
+  // bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+  // stage.addChild(bg);
+
+  // var text = new createjs.Text("Obrigado por participar!", "36px Arial", "#333");
+  // text.textAlign = "center";
+  // stage.addChild(text);
+  // text.x = stage.canvas.width / 2;
+  // text.y = stage.canvas.height / 2;
+}
+
 function avancaFase() {
+  'use strict';
   calculaPontuacaoFase(faseAtual, objetos);
 
   var tempoParaFecharPorta = 400;
-  setTimeout(function() {
-      enviaObjetosParaOFundo();
-      fechaTodasAsPortas();
-      faseAtual++;
-      if (faseAtual <= MAX_FASE && deveContinuar()) {
-        setTimeout(function() {
-          demonstraFase(faseAtual);
-        }, 1000);
-      } else {
-        gameOver();
-      }
-    },
-    tempoParaFecharPorta);
+  setTimeout(function () {
+    enviaObjetosParaOFundo();
+    fechaTodasAsPortas();
+    faseAtual += 1;
+    if (faseAtual <= MAX_FASE && deveContinuar()) {
+      setTimeout(function () {
+        demonstraFase(faseAtual);
+      }, 1000);
+    } else {
+      gameOver();
+    }
+  }, tempoParaFecharPorta);
 }
 
 function embaralhaObjetos() {
+  'use strict';
   function shuffle(a) {
     var j, x, i;
     for (i = a.length; i; i -= 1) {
@@ -151,6 +201,7 @@ function embaralhaObjetos() {
 }
 
 function definePosicaoInicialDosObjetos() {
+  'use strict';
   var center = {
       x: stage.canvas.width / 2,
       y: stage.canvas.height / 2
@@ -160,9 +211,10 @@ function definePosicaoInicialDosObjetos() {
     ncols = objetos.length / 2,
     x1 = center.x - ((ncols - 1) * semiwidth),
     y1 = center.y - semiheight - 30,
-    objeto;
+    objeto,
+    i;
 
-  for (i = 0; i < ncols; i++) {
+  for (i = 0; i < ncols; i += 1) {
     objeto = objetos[i];
     objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
     objeto.y = objeto.iniY = y1 - (objeto.getBounds().height / 4);
@@ -175,17 +227,19 @@ function definePosicaoInicialDosObjetos() {
 
 // numFase: de 0 a 17
 function carregaFase(numFase) {
-  qtdObjetosPosicionados = 0;
+  'use strict';
+  var i, especificacao, registro, objeto, outro;
+//  qtdObjetosPosicionados = 0;
   removeTodosOsObjetos();
   limpaTodasAsPortas();
   abreTodasAsPortas();
 
-  var especificacao = getEspecificacaoFase(numFase);
-  for (var i = 0; i < especificacao.length; i++) {
-    var registro = especificacao[i];
+  especificacao = getEspecificacaoFase(numFase);
+  for (i = 0; i < especificacao.length; i += 1) {
+    registro = especificacao[i];
 
-    var objeto = adicionaObjeto(registro.idObjeto, registro.idPorta);
-    var outro = adicionaObjeto(registro.idOutroObjeto, null);
+    objeto = adicionaObjeto(registro.idObjeto, registro.idPorta);
+    outro = adicionaObjeto(registro.idOutroObjeto, null);
     objetos.push(objeto);
     objetos.push(outro);
   }
@@ -193,61 +247,18 @@ function carregaFase(numFase) {
   embaralhaObjetos();
   definePosicaoInicialDosObjetos();
 
-  for (var i = 0; i < objetos.length; i++) {
+  for (i = 0; i < objetos.length; i += 1) {
     stage.addChild(objetos[i]);
   }
 }
 
 function encerraDemonstracao(numFase) {
-  setTimeout(function() {
+  'use strict';
+  setTimeout(function () {
     mostraTelaEmBranco();
   }, 500);
-  setTimeout(function() {
+  setTimeout(function () {
     mostraJogo();
     carregaFase(numFase);
   }, 1500);
-}
-
-function demonstraFase(numFase) {
-  qtdObjetosPosicionados = 0;
-  removeTodosOsObjetos();
-  limpaTodasAsPortas();
-
-  var especificacao = getEspecificacaoFase(numFase);
-
-  animaObjeto(numFase, especificacao, 0);
-}
-
-function getEspecificacaoFase(numFase) {
-  var especificacao = [];
-
-  var indice = 0;
-  for (var i = 0; i < numFase; i++) {
-    indice += qtdObjetosPorFase[i] * 3;
-  }
-
-  for (var i = indice; i <= indice + 3 * (qtdObjetosPorFase[numFase] - 1); i += 3) {
-    especificacao.push({
-      idPorta: dadosFase[i] - 1,
-      idObjeto: dadosFase[i + 1],
-      idOutroObjeto: dadosFase[i + 2]
-    });
-  }
-
-  return especificacao;
-}
-
-function gameOver() {
-  mostraMensagem("msgfim");
-  // removeTodosOsObjetos();
-
-  // var bg = new createjs.Shape();
-  // bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width, stage.canvas.height);
-  // stage.addChild(bg);
-
-  // var text = new createjs.Text("Obrigado por participar!", "36px Arial", "#333");
-  // text.textAlign = "center";
-  // stage.addChild(text);
-  // text.x = stage.canvas.width / 2;
-  // text.y = stage.canvas.height / 2;
 }

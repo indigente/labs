@@ -1,7 +1,7 @@
 /*jslint browser: true, indent: 2*/
-/*global createjs,loader*/
+/*global createjs,loader,objetoCoords,portas,destacaPorta,stage*/
 var objetos = [];
-var qtdObjetosPosicionados = 0;
+//var qtdObjetosPosicionados = 0;
 
 function carregaBitmapDoObjeto(idObjeto) {
   'use strict';
@@ -29,6 +29,14 @@ function qtdObjetosEmPortas() {
   return qtd;
 }
 
+function getIntersection(rect1, rect2) {
+  'use strict';
+  if (rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height || rect1.y + rect1.height <= rect2.y) {
+    return false;
+  }
+  return true;
+}
+
 // Retorna id da porta sob o objeto ou, se não existir, null.
 function getPortaSobObjeto(objeto) {
   'use strict';
@@ -48,8 +56,8 @@ function soltaObjeto(evt) {
   destacaPorta(null);
   stage.canvas.style.cursor = "auto";
 
-  var objeto = evt.target;
-  var idPorta = getPortaSobObjeto(objeto);
+  var objeto = evt.target,
+    idPorta = getPortaSobObjeto(objeto);
 
   if (idPorta === null || idPorta < 0) {
     // soltou fora de qualquer porta
@@ -73,6 +81,7 @@ function soltaObjeto(evt) {
 }
 
 function adicionaBinding(objeto, idPortaSobObjeto) {
+  'use strict';
   if (objeto.idPorta == idPortaSobObjeto) {
     return;
   }
@@ -88,12 +97,8 @@ function adicionaBinding(objeto, idPortaSobObjeto) {
   }
 }
 
-function getIntersection(rect1, rect2) {
-  if (rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height || rect1.y + rect1.height <= rect2.y) return false;
-  return true;
-}
-
 function removeObjeto(objeto) {
+  'use strict';
   var idObjeto = objeto.idObjeto;
   var indice = objetos.indexOf(idObjeto);
   objetos.splice(indice, 1);
@@ -101,12 +106,14 @@ function removeObjeto(objeto) {
 }
 
 function removeTodosOsObjetos() {
+  'use strict';
   for (var i = objetos.length - 1; i >= 0; i--) {
     removeObjeto(objetos[i]);
   };
 }
 
 function adicionaObjeto(idObjeto, idPorta) {
+  'use strict';
   var objeto = carregaBitmapDoObjeto(idObjeto);
   objeto.portaCerta = idPorta;
   objeto.idPorta = null;
@@ -138,10 +145,12 @@ function adicionaObjeto(idObjeto, idPorta) {
 }
 
 function todosOsObjetosForamPosicionados() {
+  'use strict';
   return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];
 }
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
+  'use strict';
   var porta = portas[idPorta];
   var portax = porta.topleft.x + porta.getBounds().width / 2;
   var portay = porta.topleft.y + porta.getBounds().height / 2;
@@ -156,6 +165,7 @@ function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
 }
 
 function moveObjetoParaPorta(objeto, idPorta) {
+  'use strict';
   var pos = getPosicaoDoObjetoNaPorta(objeto, idPorta);
   createjs.Tween.get(objeto).to({
       x: pos.x,
@@ -166,6 +176,7 @@ function moveObjetoParaPorta(objeto, idPorta) {
 }
 
 function moveObjetoParaCenario(objeto) {
+  'use strict';
   createjs.Tween.get(objeto).to({
       x: objeto.iniX,
       y: objeto.iniY
@@ -175,6 +186,7 @@ function moveObjetoParaCenario(objeto) {
 }
 
 function animaObjeto(numFase, especificacao, numObjeto) {
+  'use strict';
   if (numObjeto >= especificacao.length) {
     encerraDemonstracao(numFase);
     return;
@@ -213,6 +225,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
 }
 
 function enviaObjetosParaOFundo() {
+  'use strict';
   for (var i = 0; i < objetos.length; i++) {
     stage.addChildAt(objetos[i], 1);
   }
