@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <title>Teste de Arrumação do Armário</title>
   <link rel="stylesheet" type="text/css" href="assets/css/game.css" />
+  <script type="text/javascript" src="lib/minified-web.js"></script>
+  <script type="text/javascript">
+    var MINI = require('minified');
+    var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+  </script>
   <script type="text/javascript" src="lib/rng.js"></script>
   <script type="text/javascript" src="assets/js/fases.js"></script>
   <script type="text/javascript" src="assets/js/objetocoords.js"></script>
@@ -12,7 +17,6 @@
   <script type="text/javascript" src="assets/js/pontuacao.js"></script>
   <script type="text/javascript" src="assets/js/cenas.js"></script>
   <script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
-  <script type="text/javascript" src="lib/minified-web.js"></script>
 </head>
 <body onload="init();">
 
@@ -97,8 +101,6 @@
 </canvas>
 
 <script type="text/javascript">
-  var MINI = require('minified');
-  var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
   var stage;
   var manifest;
 

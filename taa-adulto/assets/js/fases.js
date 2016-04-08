@@ -1,5 +1,5 @@
 /*jslint browser: true, indent: 2*/
-/*global RNG,stage,calculaPontuacaoFase,objetos,enviaObjetosParaOFundo,fechaTodasAsPortas,deveContinuar,removeTodosOsObjetos,limpaTodasAsPortas,abreTodasAsPortas,adicionaObjeto,mostraTelaEmBranco,mostraJogo,animaObjeto,mostraMensagem*/
+/*global $,RNG,stage,calculaPontuacaoFase,objetos,enviaObjetosParaOFundo,fechaTodasAsPortas,deveContinuar,removeTodosOsObjetos,limpaTodasAsPortas,abreTodasAsPortas,adicionaObjeto,mostraTelaEmBranco,mostraJogo,animaObjeto,mostraMensagem*/
 
 var rng = new RNG(1); // random number generator
 var faseAtual = 0; // de 0 a 17
@@ -166,11 +166,20 @@ function gameOver() {
   // text.y = stage.canvas.height / 2;
 }
 
+function enviaPontuacao(pontuacao) {
+  'use strict';
+  $.request('post', 'inserir.php', {trial1_3O: pontuacao.objCerto,
+                        trial1_3L: pontuacao.portaCerta,
+                        trial1_3OL: pontuacao.objCertoPortaCerta}).then(function (data) { window.alert(data); });
+}
+
 function avancaFase() {
   'use strict';
-  calculaPontuacaoFase(faseAtual, objetos);
+  var tempoParaFecharPorta = 400,
+    pontuacao = calculaPontuacaoFase(faseAtual, objetos);
+  
+  enviaPontuacao(pontuacao);
 
-  var tempoParaFecharPorta = 400;
   setTimeout(function () {
     enviaObjetosParaOFundo();
     fechaTodasAsPortas();
