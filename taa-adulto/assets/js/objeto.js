@@ -53,7 +53,10 @@ function getPortaSobObjeto(objeto) {
 
 function soltaObjeto(evt) {
   'use strict';
+
   destacaPorta(null);
+  createjs.Sound.play("som");
+  
   stage.canvas.style.cursor = "auto";
 
   var objeto = evt.target,

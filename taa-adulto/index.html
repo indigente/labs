@@ -10,13 +10,14 @@
     var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
   </script>
   <script type="text/javascript" src="lib/rng.js"></script>
+  <script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
+  <script type="text/javascript" src="lib/soundjs-0.6.2.min.js"></script>
   <script type="text/javascript" src="assets/js/fases.js"></script>
   <script type="text/javascript" src="assets/js/objetocoords.js"></script>
   <script type="text/javascript" src="assets/js/objeto.js"></script>
   <script type="text/javascript" src="assets/js/porta.js"></script>
   <script type="text/javascript" src="assets/js/pontuacao.js"></script>
   <script type="text/javascript" src="assets/js/cenas.js"></script>
-  <script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
 </head>
 <body onload="init();">
 
@@ -123,15 +124,17 @@
     stage.canvas.height = 600;
 
     manifest = [
-      {src: "cozinha.jpg", id: "cozinha"},
-      {src: "porta.png", id: "porta"},
-      {src: "images.png", id: "images"}
+      {src: "images/cozinha.jpg", id: "cozinha"},
+      {src: "images/porta.png", id: "porta"},
+      {src: "images/images.png", id: "images"}
     ];
+
+    createjs.Sound.registerSound("assets/fx/R-Damage.ogg", "som");
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener("progress", handleProgress);
     loader.addEventListener("complete", handleComplete);
-    loader.loadManifest(manifest, true, "assets/images/");
+    loader.loadManifest(manifest, true, "assets/");
   }
 
   function handleProgress() {
@@ -144,7 +147,9 @@
     //mostra o fundo
     cozinha = new createjs.Bitmap(loader.getResult("cozinha"));
     stage.addChild(cozinha);
-    
+
+    createjs.Sound.play("som");
+
     inicializaPortas();
     demonstraFase(0);
 
