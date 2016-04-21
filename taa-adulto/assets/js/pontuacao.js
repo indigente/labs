@@ -43,10 +43,13 @@ function calculaPontuacaoFase(numFase, objetos) {
     if (objeto.idPorta !== null) {
       if (objeto.idPorta === objeto.portaCerta) {
         objCertoPortaCerta += 1;
-      } else if (objeto.portaCerta !== null) {
-        objCerto += 1;
-      } else if (listaPortasCertas[objeto.idPorta]) {
-        portaCerta += 1;
+      } else {
+        if (objeto.portaCerta !== null) {
+          objCerto += 1;
+        }
+        if (listaPortasCertas[objeto.idPorta]) {
+          portaCerta += 1;
+        }
       }
     }
   }
