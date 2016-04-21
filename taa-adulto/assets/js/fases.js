@@ -170,7 +170,7 @@ function enviaPontuacao(pontuacao) {
   'use strict';
   $.request('post', 'inserir.php', {trial1_3O: pontuacao.objCerto,
                         trial1_3L: pontuacao.portaCerta,
-                        trial1_3OL: pontuacao.objCertoPortaCerta}).then(function (data) { window.alert(data); });
+                        trial1_3OL: pontuacao.objCertoPortaCerta}).then(function (data) { console.log(data); });
 }
 
 function avancaFase() {
