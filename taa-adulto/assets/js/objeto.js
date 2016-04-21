@@ -224,7 +224,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
       stage.addChildAt(objeto, 1);
     })
     .call(fechaPorta, [registro.idPorta])
-    .wait(400)
+    .wait(600)
     .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
 }
 
