@@ -55,7 +55,6 @@ function soltaObjeto(evt) {
   'use strict';
 
   destacaPorta(null);
-  tocaAudio("posiciona-obj-duro");
   
   stage.canvas.style.cursor = "auto";
 
@@ -69,10 +68,12 @@ function soltaObjeto(evt) {
   } else if (idPorta === objeto.idPorta) {
     // soltou na mesma porta
     moveObjetoParaPorta(objeto, idPorta);
+    tocaAudio("posiciona-obj-duro");
   } else if (portas[idPorta].idObjeto == null) {
     // soltou em uma porta vazia
     moveObjetoParaPorta(objeto, idPorta);
     adicionaBinding(objeto, idPorta);
+    tocaAudio("posiciona-obj-duro");
   } else {
     // soltou em uma porta ocupada por outro objeto
     moveObjetoParaCenario(objeto);
