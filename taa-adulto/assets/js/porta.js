@@ -8,7 +8,7 @@ var posicoesPortas = {
 
 
 // TODO: call callback
-function abrePorta(idPorta, callback) {
+function abrePorta(idPorta, callback, silencioso) {
   'use strict';
   var finalSkewY = calculaSkewPorta(idPorta),
     porta = portas[idPorta];
@@ -27,18 +27,22 @@ function abrePorta(idPorta, callback) {
     .to({
       scaleX: -0.2
     }, 100);
+  if (!silencioso) {
+    tocaAudio("porta-abrindo");
+  }
 }
 
 function abreTodasAsPortas() {
   'use strict';
   var i;
   for (i = 0; i < portas.length; i += 1) {
-    abrePorta(i);
+    abrePorta(i, null, true);
   }
+  tocaAudio("todas-portas-abrindo");
 }
 
 // TODO: call callback
-function fechaPorta(idPorta, callback) {
+function fechaPorta(idPorta, callback, silencioso) {
   'use strict';
   var finalSkewY = calculaSkewPorta(idPorta),
     porta = portas[idPorta];
@@ -54,14 +58,18 @@ function fechaPorta(idPorta, callback) {
       skewY: 0,
       scaleX: 1
     }, 300);
+  if (!silencioso) {
+    tocaAudio("porta-fechando");
+  }
 }
 
 function fechaTodasAsPortas() {
   'use strict';
   var i;
   for (i = 0; i < portas.length; i += 1) {
-    fechaPorta(i);
+    fechaPorta(i, null, true);
   }
+  tocaAudio("todas-portas-fechando");
 }
 
 function destacaPorta(idPorta) {

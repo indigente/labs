@@ -55,7 +55,7 @@ function soltaObjeto(evt) {
   'use strict';
 
   destacaPorta(null);
-  createjs.Sound.play("som");
+  tocaAudio("posiciona-obj-duro");
   
   stage.canvas.style.cursor = "auto";
 

@@ -12,6 +12,7 @@
   <script type="text/javascript" src="lib/rng.js"></script>
   <script type="text/javascript" src="lib/createjs-2015.05.21.min.js"></script>
   <script type="text/javascript" src="lib/soundjs-0.6.2.min.js"></script>
+  <script type="text/javascript" src="assets/js/audio.js"></script>
   <script type="text/javascript" src="assets/js/fases.js"></script>
   <script type="text/javascript" src="assets/js/objetocoords.js"></script>
   <script type="text/javascript" src="assets/js/objeto.js"></script>
@@ -25,6 +26,8 @@
   <h2>Créditos</h2>
   <p><b>Game design</b>: Neander Abreu</p>
   <p><b>Programação</b>: Rodrigo Rocha, Diego Zabot, Marcos Mass</p>
+  <p><b>Áudio</b>: Tharcísio Vaz</p>
+  <p><b>Arte gráfica</b>: Daiane Mascarenhas</p>
   <p><b>Texto</b>: Rogério Lázaro Jr.</p>
   <p><b>Beta testing</b>: Rogério Lázaro Jr., Antonio Santana, Felipe Freitas</p>
   <button onclick="mostraMensagem('msgintro');">Voltar</button>
@@ -34,6 +37,8 @@
   <h2>Credits</h2>
   <p><b>Game design</b>: Neander Abreu</p>
   <p><b>Programming</b>: Rodrigo Rocha, Diego Zabot, Marcos Mass</p>
+  <p><b>Audio</b>: Tharcísio Vaz</p>
+  <p><b>Visual art</b>: Daiane Mascarenhas</p>
   <p><b>Text</b>: Rogério Lázaro Jr.</p>
   <p><b>Beta testing</b>: Rogério Lázaro Jr., Antonio Santana, Felipe Freitas</p>
   <button onclick="mostraMensagem('msgintro');">Back</button>
@@ -129,7 +134,14 @@
       {src: "images/images.png", id: "images"}
     ];
 
-    createjs.Sound.registerSound("assets/fx/R-Damage.ogg", "som");
+    createjs.Sound.registerSound("assets/fx/porta-abrindo.mp3", "porta-abrindo");
+    createjs.Sound.registerSound("assets/fx/porta-fechando.mp3", "porta-fechando");
+    createjs.Sound.registerSound("assets/fx/posiciona-alimento.mp3", "posiciona-alimento");
+    createjs.Sound.registerSound("assets/fx/posiciona-obj-duro.mp3", "posiciona-obj-duro");
+    createjs.Sound.registerSound("assets/fx/posiciona-talher.mp3", "posiciona-talher");
+    createjs.Sound.registerSound("assets/fx/posiciona-vidro.mp3", "posiciona-vidro");
+    createjs.Sound.registerSound("assets/fx/todas-portas-abrindo.mp3", "todas-portas-abrindo");
+    createjs.Sound.registerSound("assets/fx/todas-portas-fechando.mp3", "todas-portas-fechando");
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener("progress", handleProgress);
@@ -147,8 +159,6 @@
     //mostra o fundo
     cozinha = new createjs.Bitmap(loader.getResult("cozinha"));
     stage.addChild(cozinha);
-
-    createjs.Sound.play("som");
 
     inicializaPortas();
     demonstraFase(0);
