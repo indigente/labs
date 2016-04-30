@@ -1,15 +1,17 @@
-canvas {
+body {
+    margin: 0;
+}
+
+canvas, .mensagem {
 	width: 800px;
 	height: 600px;
+	display: block;
+	margin: 0px auto 0px auto;
 	border: black solid 1px;
 }
 
 .mensagem {
-	width: 800px;
-	height: 600px;
-	border: black solid 1px;
-
-	font-size: 20pt;
+	font-size: 2.5vw;
 	display: none;
 }
 

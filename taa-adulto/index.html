@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta charset="UTF-8">
   <title>Teste de Arrumação do Armário</title>
   <link rel="stylesheet" type="text/css" href="assets/css/game.css" />
@@ -116,6 +117,24 @@
 
   //objetos do jogo e portas
 
+  function resizeCanvas() {
+    var rw = 800;
+    var rh = 600;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var multiplier = Math.min((h / rh), (w / rw));
+    var actualCanvasWidth = rw * multiplier - 2;
+    var actualCanvasHeight = rh * multiplier - 2;
+    var canvas = $('#canvas')[0];
+    canvas.style.width = actualCanvasWidth + "px";
+    canvas.style.height = actualCanvasHeight + "px";
+    $(".mensagem").each(function (div) {
+      div.style.width = actualCanvasWidth + "px";
+      div.style.height = actualCanvasHeight + "px";
+    });
+  }
+  window.addEventListener('resize', resizeCanvas, true);
+
   function init(){
     if (window.location.search === "?en") {
       mudaIdioma("en");
@@ -127,6 +146,7 @@
     createjs.Touch.enable(stage);
     stage.canvas.width = 800;
     stage.canvas.height = 600;
+    resizeCanvas();
 
     manifest = [
       {src: "images/cozinha.jpg", id: "cozinha"},
