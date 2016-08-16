@@ -29,7 +29,7 @@ function calculaPontuacaoFase(numFase, objetos) {
     objeto,
     i,
     pontuacaoFase;
-  
+
   for (i = 0; i < objetos.length; i += 1) {
     objeto = objetos[i];
     if (objeto.portaCerta !== null) {
@@ -83,4 +83,13 @@ function deveContinuar() {
       return true;
     }
   }
+}
+
+function pontuacaoArray() {
+  var array = pontuacao.map(p => [p.totalObjetos, p.objCertoPortaCerta, p.objCerto, p.portaCerta]);
+  array = [].concat.apply([], array)
+  return array;
+}
+function pontuacaoTsv() {
+  return pontuacaoArray().join("\t");
 }
