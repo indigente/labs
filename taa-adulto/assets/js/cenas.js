@@ -58,3 +58,53 @@ function validaForm(){
   else
     alert("Compilar todo o formulario!");
 }
+
+class Cena {
+  constructor() {
+    if (new.target === Cena) {
+      throw new TypeError("Cannot construct Abstract instances directly");
+    }
+  }
+  begin() {}
+  end() {}
+}
+
+class CenaTextoFundoBranco extends Cena {
+  constructor() {
+    super();
+    this.box = new createjs.Shape();
+    this.box.graphics.beginFill('#ffffff');
+    this.box.graphics.drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+    this.text = new createjs.Text(this.getMensagem(), this.getFont(), "#000");
+  }
+  getMensagem() {
+    return 'placelholder message';
+  }
+  getFont() {
+    return '50px Arial';
+  }
+  begin() {
+    var bounds = this.text.getBounds();
+    this.text.x = (stage.canvas.width - bounds.width) / 2;
+    this.text.y = (stage.canvas.height - bounds.height) / 2;
+
+    stage.addChild(this.box);
+    stage.addChild(this.text);
+  }
+  end() {
+    stage.removeChild(this.text);
+    stage.removeChild(this.box);
+  }
+}
+
+class CenaAtencao extends CenaTextoFundoBranco {
+  getMensagem() {
+    return 'Atenção!';
+  }
+}
+
+class CenaSuaVez extends CenaTextoFundoBranco {
+  getMensagem() {
+    return 'Agora é sua vez!';
+  }
+}

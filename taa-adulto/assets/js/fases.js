@@ -1,5 +1,11 @@
 /*jslint browser: true, indent: 2*/
 /*global $,RNG,stage,calculaPontuacaoFase,objetos,enviaObjetosParaOFundo,fechaTodasAsPortas,deveContinuar,removeTodosOsObjetos,limpaTodasAsPortas,abreTodasAsPortas,adicionaObjeto,mostraTelaEmBranco,mostraJogo,animaObjeto,mostraMensagem*/
+var PARAMS = {
+  tempoDemoAposFecharUltimaPorta: 500,
+  tempoDemoTelaBranco: 1000,
+  tempoTentativaAposFecharUltimaPorta: 1000,
+  tempoTentativaMensagemAtencao: 2000,
+}
 
 var rng = new RNG(1); // random number generator
 var faseAtual = 0; // de 0 a 17
@@ -176,7 +182,8 @@ function enviaPontuacao(pontuacao) {
 function avancaFase() {
   'use strict';
   var tempoParaFecharPorta = 400,
-    pontuacao = calculaPontuacaoFase(faseAtual, objetos);
+    pontuacao = calculaPontuacaoFase(faseAtual, objetos),
+    cenaAtencao = new CenaAtencao();
 
   enviaPontuacao(pontuacao);
 
@@ -185,8 +192,10 @@ function avancaFase() {
     fechaTodasAsPortas();
     faseAtual += 1;
     if (faseAtual <= MAX_FASE && deveContinuar()) {
-      setTimeout(function () { mostraMensagem('attention'); }, 1000);
-      setTimeout(function () { mostraJogo(); demonstraFase(faseAtual); }, 3000);
+      let t1 = PARAMS.tempoTentativaAposFecharUltimaPorta,
+          t2 = t1 + PARAMS.tempoTentativaMensagemAtencao;
+      setTimeout(function () { cenaAtencao.begin(); }, t1);
+      setTimeout(function () { cenaAtencao.end(); demonstraFase(faseAtual); }, t2);
     } else {
       gameOver();
     }
@@ -262,11 +271,14 @@ function carregaFase(numFase) {
 
 function encerraDemonstracao(numFase) {
   'use strict';
+  var t1 = PARAMS.tempoTentativaAposFecharUltimaPorta,
+      t2 = t1 + PARAMS.tempoTentativaMensagemAtencao,
+      cenaSuaVez = new CenaSuaVez();
   setTimeout(function () {
-    mostraTelaEmBranco();
-  }, 500);
+    cenaSuaVez.begin();
+  }, t1);
   setTimeout(function () {
-    mostraJogo();
+    cenaSuaVez.end();
     carregaFase(numFase);
-  }, 1500);
+  }, t2);
 }
