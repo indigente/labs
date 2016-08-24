@@ -55,7 +55,7 @@ function soltaObjeto(evt) {
   'use strict';
 
   destacaPorta(null);
-  
+
   stage.canvas.style.cursor = "auto";
 
   var objeto = evt.target,
@@ -80,7 +80,12 @@ function soltaObjeto(evt) {
   }
 
   if (todosOsObjetosForamPosicionados()) {
-    avancaFase();
+    var desfazUltimaAlocacao = function() {
+      moveObjetoParaCenario(objeto);
+      adicionaBinding(objeto, null);
+    }
+    var cenaConfirmarCorrigir = new CenaConfirmarCorrigir(avancaFase, desfazUltimaAlocacao);
+    cenaConfirmarCorrigir.begin();
   }
 }
 

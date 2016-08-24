@@ -5,6 +5,7 @@ var PARAMS = {
   tempoDemoTelaBranco: 1000,
   tempoTentativaAposFecharUltimaPorta: 1000,
   tempoTentativaMensagemAtencao: 2000,
+  tempoParaFecharPorta: 400, /* apos posicionar ultimo objeto */
 }
 
 var rng = new RNG(1); // random number generator
@@ -181,8 +182,7 @@ function enviaPontuacao(pontuacao) {
 
 function avancaFase() {
   'use strict';
-  var tempoParaFecharPorta = 400,
-    pontuacao = calculaPontuacaoFase(faseAtual, objetos),
+  var pontuacao = calculaPontuacaoFase(faseAtual, objetos),
     cenaAtencao = new CenaAtencao();
 
   enviaPontuacao(pontuacao);
@@ -199,7 +199,7 @@ function avancaFase() {
     } else {
       gameOver();
     }
-  }, tempoParaFecharPorta);
+  }, PARAMS.tempoParaFecharPorta);
 }
 
 function embaralhaObjetos() {

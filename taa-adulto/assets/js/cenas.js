@@ -69,6 +69,79 @@ class Cena {
   end() {}
 }
 
+function criaBotao(rotulo, onclick) {
+  var container = new createjs.Container(),
+      text = new createjs.Text(rotulo, '50px Arial', "#000"),
+      box = new createjs.Shape(),
+      paddingWidth = 9,
+      paddingHeight = 3;
+
+  box.graphics.beginFill('#ffffff');
+  box.graphics.drawRect(0, 0,
+      text.getBounds().width + 2 * paddingWidth,
+      text.getBounds().height + 2 * paddingHeight);
+
+  box.name = 'box';
+  text.name = 'text';
+  container.addChild(box);
+  container.addChild(text);
+  text.x = paddingWidth;
+  if (onclick !== undefined) {
+    container.on('click', onclick);
+  }
+
+  return container;
+}
+
+class CenaConfirmarCorrigir extends Cena {
+  constructor(fnConfirmar, fnCorrigir) {
+    super();
+    
+    var that;
+    this.fnConfirmar = fnConfirmar;
+    this.fnCorrigir = fnCorrigir;
+
+    that = this;
+    this.btnConfirmar = criaBotao('Confirmar', function () {
+      that.end();
+      that.fnConfirmar();
+    });
+    this.btnCorrigir = criaBotao('Corrigir', function () {
+      that.end();
+      that.fnCorrigir();
+    });
+    this.boxDark = new createjs.Shape();
+    this.boxDark.graphics.beginFill('rgba(0, 0, 0, 0.5)');
+    this.boxDark.graphics.drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+    this.iniciou = false;
+  }
+
+  begin() {
+    if (!this.iniciou) {
+      this.iniciou = true;
+
+      this.btnConfirmar.x = 500;
+      this.btnConfirmar.y = 250;
+
+      this.btnCorrigir.x = 300;
+      this.btnCorrigir.y = this.btnConfirmar.y;
+
+      stage.addChild(this.boxDark);
+      stage.addChild(this.btnConfirmar);
+      stage.addChild(this.btnCorrigir);
+    }
+  }
+
+  end() {
+    if (this.iniciou) {
+      this.iniciou = false;
+      stage.removeChild(this.btnCorrigir);
+      stage.removeChild(this.btnConfirmar);
+      stage.removeChild(this.boxDark);
+    }
+  }
+}
+
 class CenaTextoFundoBranco extends Cena {
   constructor() {
     super();
