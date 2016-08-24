@@ -83,8 +83,12 @@ function soltaObjeto(evt) {
     var desfazUltimaAlocacao = function() {
       moveObjetoParaCenario(objeto);
       adicionaBinding(objeto, null);
+      ativaInteracaoObjetos();
     }
-    var cenaConfirmarCorrigir = new CenaConfirmarCorrigir(avancaFase, desfazUltimaAlocacao);
+    desativaInteracaoObjetos();
+    var cenaConfirmarCorrigir = new CenaConfirmarCorrigir(
+      avancaFase,
+      desfazUltimaAlocacao);
     cenaConfirmarCorrigir.begin();
   }
 }
@@ -121,6 +125,39 @@ function removeTodosOsObjetos() {
   };
 }
 
+function objetoOnMouseDown(evt) {
+  console.log(this);
+  //this.parent.addChild(this);
+  this.offX = this.x - evt.stageX;
+  this.offY = this.y - evt.stageY;
+}
+
+function objetoOnPressMove(evt) {
+  stage.canvas.style.cursor = "none";
+  this.x = evt.stageX + this.offX;
+  this.y = evt.stageY + this.offY;
+  var match = getPortaSobObjeto(evt.target);
+  destacaPorta(match);
+}
+
+function defineObjetoInteragivel(objeto, interagivel) {
+  if (interagivel) {
+    objeto.on('mousedown', objetoOnMouseDown);
+    objeto.on('pressmove', objetoOnPressMove);
+    objeto.on('pressup', soltaObjeto);
+  } else {
+    objeto.removeAllEventListeners();
+  }
+}
+
+function ativaInteracaoObjetos() {
+  objetos.forEach(obj => defineObjetoInteragivel(obj, true));
+}
+
+function desativaInteracaoObjetos() {
+  objetos.forEach(obj => defineObjetoInteragivel(obj, false));
+}
+
 function adicionaObjeto(idObjeto, idPorta) {
   'use strict';
   var objeto = carregaBitmapDoObjeto(idObjeto);
@@ -134,21 +171,7 @@ function adicionaObjeto(idObjeto, idPorta) {
   objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
   objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
 
-  objeto.on("mousedown", function(evt) {
-    this.parent.addChild(this);
-    this.offX = this.x - evt.stageX;
-    this.offY = this.y - evt.stageY;
-  });
-
-  objeto.on("pressmove", function(evt) {
-    stage.canvas.style.cursor = "none";
-    this.x = evt.stageX + this.offX;
-    this.y = evt.stageY + this.offY;
-    var match = getPortaSobObjeto(evt.target);
-    destacaPorta(match);
-  });
-
-  objeto.addEventListener("pressup", soltaObjeto);
+  defineObjetoInteragivel(objeto, true);
 
   return objeto;
 }

@@ -274,6 +274,9 @@ function encerraDemonstracao(numFase) {
   var t1 = PARAMS.tempoTentativaAposFecharUltimaPorta,
       t2 = t1 + PARAMS.tempoTentativaMensagemAtencao,
       cenaSuaVez = new CenaSuaVez();
+
+  ativaInteracaoObjetos();
+  
   setTimeout(function () {
     cenaSuaVez.begin();
   }, t1);
