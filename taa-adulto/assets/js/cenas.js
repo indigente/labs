@@ -96,7 +96,7 @@ function criaBotao(rotulo, onclick) {
 class CenaConfirmarCorrigir extends Cena {
   constructor(fnConfirmar, fnCorrigir) {
     super();
-    
+
     var that;
     this.fnConfirmar = fnConfirmar;
     this.fnCorrigir = fnCorrigir;

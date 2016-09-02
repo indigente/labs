@@ -237,7 +237,7 @@ function animaObjeto(numFase, especificacao, numObjeto) {
   objeto.scaleX = 1.0;
   objeto.scaleY = 1.0;
 
-  createjs.Tween.get(objeto)
+  var tween = createjs.Tween.get(objeto, {paused: true})
     .call(abrePorta, [registro.idPorta])
     .wait(500)
     .to({
@@ -254,6 +254,15 @@ function animaObjeto(numFase, especificacao, numObjeto) {
     .call(fechaPorta, [registro.idPorta])
     .wait(600)
     .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
+
+  if (ehFaseTutorial(numFase)) {
+    var cena = new CenaConfirmarCorrigir(
+      () => tween.setPaused(false),
+      () => {});
+    cena.begin();
+  } else {
+    tween.setPaused(false);
+  }
 }
 
 function enviaObjetosParaOFundo() {

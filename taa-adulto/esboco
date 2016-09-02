@@ -1,0 +1,6 @@
+- fase: demonstraFase
+- objeto: animaObjeto
+- fase: encerraDemonstracao
+- fase: carregaFase
+- objeto: soltaObjeto
+- fase: avancaFase  (e volta!)
