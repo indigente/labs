@@ -24,15 +24,32 @@ function getIntersection(rect1, rect2) {
   return true;
 }
 
+function squareDistance(rect1, rect2) {
+  var cx1, cy1, cx2, cy2;
+  var dx, dy;
+  cx1 = rect1.x + rect1.width / 2;
+  cy1 = rect1.y + rect1.height / 2;
+  cx2 = rect2.x + rect2.width / 2;
+  cy2 = rect2.y + rect2.height / 2;
+  dx = cx1 - cx2;
+  dy = cy1 - cy2;
+  return dx * dx + dy * dy;
+}
+
 // Retorna id da porta sob o objeto ou, se não existir, null.
 function getPortaSobObjeto(objeto) {
   'use strict';
-  var i, porta = null;
+  var i, porta = null, minDist = 9999999999, dist, rect1, rect2;
 
   for (i = 0; i < 16; i += 1) {
-    if (getIntersection(portas[i].topleft, objeto.getTransformedBounds())) {
-      porta = i;
-      break;
+    rect1 = portas[i].topleft;
+    rect2 = objeto.getTransformedBounds();
+    if (getIntersection(rect1, rect2)) {
+      var dist = squareDistance(rect1, rect2);
+      if (dist < minDist) {
+        minDist = dist;
+        porta = i;
+      }
     }
   }
   return porta;
