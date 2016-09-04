@@ -96,7 +96,7 @@ function criaBotao(rotulo, onclick) {
 class CenaConfirmarCorrigir extends Cena {
   constructor(fnConfirmar, fnCorrigir) {
     super();
-    
+
     var that;
     this.fnConfirmar = fnConfirmar;
     this.fnCorrigir = fnCorrigir;
@@ -179,5 +179,11 @@ class CenaAtencao extends CenaTextoFundoBranco {
 class CenaSuaVez extends CenaTextoFundoBranco {
   getMensagem() {
     return 'Agora é sua vez!';
+  }
+}
+
+class CenaGameOver extends CenaTextoFundoBranco {
+  getMensagem() {
+      return 'Obrigado por participar!'
   }
 }
