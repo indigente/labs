@@ -4,3 +4,24 @@
 - fase: carregaFase
 - objeto: soltaObjeto
 - fase: avancaFase  (e volta!)
+
+----------
+
+- Aparece objeto no meio
+- "Preste atenção neste objeto. Memorize a porta onde ele será guardado." OK
+
+- Objeto é guardado na porta
+- Aparece objeto no meio
+- "Mais um objeto. Preste atenção onde ele será guardado." OK
+
+- Objeto é guardado na porta.
+- Tela em branco: "Agora é sua vez!"
+- "Arraste os objetos para as portas corretas." OK
+
+- "Muito bem! Agora vamos repetir esse desafio algumas vezes, aumentando
+a dificuldade. Você está pronto?"
+
+ou
+
+- "Vamos tentar mais uma vez? Preste atenção nos objetos e nas portas onde
+eles serão guardados."

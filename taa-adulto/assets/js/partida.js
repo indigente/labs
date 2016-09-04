@@ -83,7 +83,7 @@ class CenaDemonstracaoFase extends Cena {
     cenaAtencao.begin();
     setTimeout(function () {
       cenaAtencao.end();
-      limpaTodasAsPortas(); // TODO: deve ser responsabilidade da fase de interação
+      limpaTodasAsPortas(that.objetosCertos); // TODO: deve ser responsabilidade da fase de interação
       that.animaObjeto(0);
     }, PARAMS.tempoTentativaMensagemAtencao)
 
@@ -157,15 +157,16 @@ class CenaDemonstracaoFase extends Cena {
 }
 
 class CenaInteracaoFase extends Cena {
-  constructor(objetos) {
+  constructor(objetos, ehTutorial) {
     super();
+    this.ehTutorial = ehTutorial;
     this.objetos = objetos;
     this.rng = new RNG(1);
     this.quandoFinalizar = new Notifier();
   }
 
   begin() {
-    limpaTodasAsPortas();
+    limpaTodasAsPortas(this.objetos);
     abreTodasAsPortas();
 
     this.embaralhaObjetos();
@@ -372,7 +373,7 @@ class Fase {
   }
 
   iniciaInteracao() {
-    this.cenaInteracao = new CenaInteracaoFase(this.objetos);
+    this.cenaInteracao = new CenaInteracaoFase(this.objetos, this.ehTutorial);
     this.cenaInteracao.quandoFinalizar.addListener(this.finalizaInteracao.bind(this));
     this.cenaInteracao.begin();
   }
@@ -383,11 +384,16 @@ class Fase {
   }
 
   finalizaFase() {
-    var pontuacao = calculaPontuacaoFase(this.numFase, objetos),
+    var pontuacao = calculaPontuacaoFase(this.numFase, this.objetos),
       that = this;
 
-    this.enviaPontuacao(pontuacao);
-    this.quandoFinalizar.notify();
+    var sucesso = (2 * pontuacao.objCertoPortaCerta === pontuacao.totalObjetos);
+    if (this.ehTutorial && !sucesso) {
+      this.iniciaDemonstracao();
+    } else {
+      this.enviaPontuacao(pontuacao);
+      this.quandoFinalizar.notify();
+    }
   }
 
   enviaPontuacao(pontuacao) {

@@ -112,12 +112,9 @@ function inicializaPortas() {
   }
 }
 
-function limpaTodasAsPortas() {
-  'use strict';
-  var i;
-  for (i = 0; i < portas.length; i += 1) {
-    portas[i].idObjeto = null;
-  }
+function limpaTodasAsPortas(objetos) {
+  portas.forEach(porta => porta.idObjeto = null);
+  objetos.forEach(obj => obj.idPorta = null);
 }
 
 function calculaSkewPorta(idPorta) {
