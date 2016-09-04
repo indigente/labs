@@ -78,8 +78,15 @@ class CenaDemonstracaoFase extends Cena {
   }
 
   begin() {
-    limpaTodasAsPortas(); // TODO: deve ser responsabilidade da fase de interação
-    this.animaObjeto(0);
+    var that = this,
+        cenaAtencao = new CenaAtencao();
+    cenaAtencao.begin();
+    setTimeout(function () {
+      cenaAtencao.end();
+      limpaTodasAsPortas(); // TODO: deve ser responsabilidade da fase de interação
+      that.animaObjeto(0);
+    }, PARAMS.tempoTentativaMensagemAtencao)
+
   }
 
   animaObjeto(numObjeto) {
@@ -149,73 +156,118 @@ class CenaDemonstracaoFase extends Cena {
   }
 }
 
-class Fase {
-  /**
-   * descricao é um array de tamanho múltiplo de 3; em cada sequência de 3 elementos:
-   // O primeiro número é o *id* da porta (contado a partir de 1);
-   // o segundo é o *id* do objeto que vai ser colocado na porta,
-   // e o terceiro é o *id* de um outro objeto que vai aparecer no final só pra confundir.
-   *
-   * exemplo: [1, 39, 38, 2, 13, 8]
-   */
-  constructor(ehTutorial, descricao) {
-    this.quandoFinalizar = new Notifier();
-    this.ehTutorial = ehTutorial;
-    this.totalObjetosCertos = descricao.length / 3;
-    this.objetosCertos = [];
-    this.objetos = [];
+class CenaInteracaoFase extends Cena {
+  constructor(objetos) {
+    super();
+    this.objetos = objetos;
     this.rng = new RNG(1);
+    this.quandoFinalizar = new Notifier();
+  }
 
-    for (var i = 0; i < descricao.length; i += 3) {
-      let idPorta = descricao[i] - 1,
-          idObjeto = descricao[i + 1],
-          idOutroObjeto = descricao[i + 2],
-          objeto = this.adicionaObjeto(idObjeto, idPorta),
-          outro = this.adicionaObjeto(idOutroObjeto, null);
-      this.objetos.push(objeto);
-      this.objetos.push(outro);
+  begin() {
+    limpaTodasAsPortas();
+    abreTodasAsPortas();
 
-      this.objetosCertos.push(objeto);
+    this.embaralhaObjetos();
+    this.definePosicaoInicialDosObjetos();
+
+    var that = this;
+    this.objetos.forEach(function (obj) {
+      stage.addChild(obj);
+      that.defineObjetoInteragivel(obj, true);
+    });
+  }
+
+  end() {
+    var that = this;
+
+    setTimeout(function () {
+      that.enviaObjetosParaOFundo();
+      fechaTodasAsPortas();
+      setTimeout(function () {
+          that.objetos.forEach(function (obj) {
+            stage.removeChild(obj);
+            that.defineObjetoInteragivel(obj, false);
+          });
+          that.quandoFinalizar.notify();
+        },
+        PARAMS.tempoTentativaAposFecharUltimaPorta);
+    }, PARAMS.tempoParaFecharPorta);
+
+  }
+
+  enviaObjetosParaOFundo() {
+    for (var i = 0; i < this.objetos.length; i++) {
+      stage.addChildAt(this.objetos[i], 1);
     }
   }
 
-  demonstra() {
-    this.cenaDemonstracao = new CenaDemonstracaoFase(this.objetosCertos, this.ehTutorial);
-    this.cenaDemonstracao.quandoFinalizar.addListener(this.finalizaDemonstracao.bind(this));
-    this.cenaDemonstracao.begin();
+  embaralhaObjetos() {
+    var that = this;
+    function shuffle(a) {
+      var j, x, i;
+      for (i = a.length; i; i -= 1) {
+        j = Math.floor(that.rng.uniform() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+      }
+    }
+
+    shuffle(this.objetos);
   }
 
-  finalizaDemonstracao() {
-    this.cenaDemonstracao = null;
-    this.iniciaInteracao();
-  }
+  definePosicaoInicialDosObjetos() {
+    var center = {
+      x: stage.canvas.width / 2,
+      y: stage.canvas.height / 2
+    },
+    semiwidth = 50,
+    semiheight = 40,
+    ncols = this.objetos.length / 2,
+    x1 = center.x - ((ncols - 1) * semiwidth),
+    y1 = center.y - semiheight - 30,
+    objeto,
+    i;
 
-  adicionaObjeto(idObjeto, idPorta) {
-    var objeto = carregaBitmapDoObjeto(idObjeto);
-    objeto.portaCerta = idPorta;
-    objeto.idPorta = null;
-    objeto.idObjeto = idObjeto;
-    objeto.offX = 0;
-    objeto.offY = 0;
+    for (i = 0; i < ncols; i += 1) {
+      objeto = this.objetos[i];
+      objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
+      objeto.y = objeto.iniY = y1 - (objeto.getBounds().height / 4);
 
-    objeto.scaleX = objeto.scaleY = .5;
-    objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
-    objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
-
-    return objeto;
+      objeto = this.objetos[ncols + i];
+      objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
+      objeto.y = objeto.iniY = y1 + 2 * semiheight - (objeto.getBounds().height / 4);
+    }
   }
 
   defineObjetoInteragivel(objeto, interagivel) {
     if (interagivel) {
-      objeto.on('mousedown', objetoOnMouseDown);
-      objeto.on('pressmove', objetoOnPressMove);
+      objeto.on('mousedown', this.objetoOnMouseDown.bind(this));
+      objeto.on('pressmove', this.objetoOnPressMove.bind(this));
       objeto.on('pressup', this.soltaObjeto.bind(this));
     } else {
       objeto.removeAllEventListeners();
     }
   }
 
+  objetoOnMouseDown(evt) {
+    var objeto = evt.target;
+    objeto.offX = objeto.x - evt.stageX;
+    objeto.offY = objeto.y - evt.stageY;
+  }
+
+  objetoOnPressMove(evt) {
+    var objeto = evt.target;
+    stage.canvas.style.cursor = "none";
+    objeto.x = evt.stageX + objeto.offX;
+    objeto.y = evt.stageY + objeto.offY;
+    var match = getPortaSobObjeto(objeto);
+    destacaPorta(match);
+  }
+
   soltaObjeto(evt) {
+    var that = this;
     destacaPorta(null);
 
     stage.canvas.style.cursor = "auto";
@@ -245,120 +297,134 @@ class Fase {
       var desfazUltimaAlocacao = function() {
         moveObjetoParaCenario(objeto);
         adicionaBinding(objeto, null);
-        ativaInteracaoObjetos();
+        that.objetos.forEach((obj) => that.defineObjetoInteragivel(obj, true));
       }
-      desativaInteracaoObjetos();
+      this.objetos.forEach((obj) => that.defineObjetoInteragivel(obj, false));
       var cenaConfirmarCorrigir = new CenaConfirmarCorrigir(
-        this.finalizaFase.bind(this),
+        this.end.bind(this),
         desfazUltimaAlocacao);
       cenaConfirmarCorrigir.begin();
     }
   }
 
   todosOsObjetosForamPosicionados() {
-    var i, qtd = 0;
-    for (i = 0; i < this.objetos.length; i += 1) {
-      if (this.objetos[i].idPorta !== null) {
-        qtd += 1;
-      }
+    var qtd = this.objetos.reduce(
+        (count, obj) => count += (obj.idPorta === null ? 0 : 1),
+        0);
+    return qtd === this.objetos.length / 2;
+  }
+}
+
+class Fase {
+  /**
+   * descricao é um array de tamanho múltiplo de 3; em cada sequência de 3 elementos:
+   // O primeiro número é o *id* da porta (contado a partir de 1);
+   // o segundo é o *id* do objeto que vai ser colocado na porta,
+   // e o terceiro é o *id* de um outro objeto que vai aparecer no final só pra confundir.
+   *
+   * exemplo: [1, 39, 38, 2, 13, 8]
+   */
+  constructor(numFase, ehTutorial, descricao) {
+    this.quandoFinalizar = new Notifier();
+    this.ehTutorial = ehTutorial;
+    this.totalObjetosCertos = descricao.length / 3;
+    this.objetosCertos = [];
+    this.objetos = [];
+    this.numFase = numFase;
+
+    for (var i = 0; i < descricao.length; i += 3) {
+      let idPorta = descricao[i] - 1,
+          idObjeto = descricao[i + 1],
+          idOutroObjeto = descricao[i + 2],
+          objeto = this.adicionaObjeto(idObjeto, idPorta),
+          outro = this.adicionaObjeto(idOutroObjeto, null);
+      this.objetos.push(objeto);
+      this.objetos.push(outro);
+
+      this.objetosCertos.push(objeto);
     }
-    return qtd === this.totalObjetosCertos;
   }
 
+  adicionaObjeto(idObjeto, idPorta) {
+    var objeto = carregaBitmapDoObjeto(idObjeto);
+    objeto.portaCerta = idPorta;
+    objeto.idPorta = null;
+    objeto.idObjeto = idObjeto;
+    objeto.offX = 0;
+    objeto.offY = 0;
 
+    objeto.scaleX = objeto.scaleY = .5;
+    objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
+    objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
+
+    return objeto;
+  }
+
+  iniciaDemonstracao() {
+    this.cenaDemonstracao = new CenaDemonstracaoFase(this.objetosCertos, this.ehTutorial);
+    this.cenaDemonstracao.quandoFinalizar.addListener(this.finalizaDemonstracao.bind(this));
+    this.cenaDemonstracao.begin();
+  }
+
+  finalizaDemonstracao() {
+    this.cenaDemonstracao = null;
+    this.iniciaInteracao();
+  }
 
   iniciaInteracao() {
-    var i, especificacao, registro, objeto, outro;
+    this.cenaInteracao = new CenaInteracaoFase(this.objetos);
+    this.cenaInteracao.quandoFinalizar.addListener(this.finalizaInteracao.bind(this));
+    this.cenaInteracao.begin();
+  }
 
-    //removeTodosOsObjetos();
-    limpaTodasAsPortas();
-    abreTodasAsPortas();
-
-    this.embaralhaObjetos();
-    this.definePosicaoInicialDosObjetos();
-
-    for (i = 0; i < this.objetos.length; i += 1) {
-      stage.addChild(this.objetos[i]);
-    }
-
-    objetos.forEach((obj) => this.defineObjetoInteragivel(obj));
+  finalizaInteracao() {
+    this.cenaInteracao = null;
+    this.finalizaFase();
   }
 
   finalizaFase() {
-    var pontuacao = calculaPontuacaoFase(faseAtual, objetos),
-      cenaAtencao = new CenaAtencao(),
+    var pontuacao = calculaPontuacaoFase(this.numFase, objetos),
       that = this;
 
-    enviaPontuacao(pontuacao);
-
-    setTimeout(function () {
-      enviaObjetosParaOFundo();
-      fechaTodasAsPortas();
-      setTimeout(function () {
-            that.quandoFinalizar.notify();
-          },
-          PARAMS.tempoTentativaAposFecharUltimaPorta);
-    }, PARAMS.tempoParaFecharPorta);
+    this.enviaPontuacao(pontuacao);
+    this.quandoFinalizar.notify();
   }
 
-  embaralhaObjetos() {
-    var that = this;
-    function shuffle(a) {
-      var j, x, i;
-      for (i = a.length; i; i -= 1) {
-        j = Math.floor(that.rng.uniform() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-      }
-    }
-
-    shuffle(this.objetos);
-  }
-
-  definePosicaoInicialDosObjetos() {
-    var center = {
-        x: stage.canvas.width / 2,
-        y: stage.canvas.height / 2
-      },
-      semiwidth = 50,
-      semiheight = 40,
-      ncols = this.objetos.length / 2,
-      x1 = center.x - ((ncols - 1) * semiwidth),
-      y1 = center.y - semiheight - 30,
-      objeto,
-      i;
-
-    for (i = 0; i < ncols; i += 1) {
-      objeto = this.objetos[i];
-      objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
-      objeto.y = objeto.iniY = y1 - (objeto.getBounds().height / 4);
-
-      objeto = this.objetos[ncols + i];
-      objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
-      objeto.y = objeto.iniY = y1 + 2 * semiheight - (objeto.getBounds().height / 4);
-    }
+  enviaPontuacao(pontuacao) {
+    $.request('post', 'inserir.php', {trial1_3O: pontuacao.objCerto,
+                          trial1_3L: pontuacao.portaCerta,
+                          trial1_3OL: pontuacao.objCertoPortaCerta}).then(function (data) { console.log(data); });
   }
 }
 
 class Partida {
   constructor() {
-    //especificacoesFase
+  }
 
+  inicia() {
+    this.iniciaFase(0);
   }
 
   iniciaFase(numFase) {
+    this.numFaseAtual = numFase;
     if (numFase < 0 || numFase >= especificacoesFase.length) {
       throw 'Fase inválida: ' + numFase;
     }
     var tutorial = (numFase == 0);
-    this.faseAtual = new Fase(tutorial, especificacoesFase[numFase]);
+    this.faseAtual = new Fase(numFase, tutorial, especificacoesFase[numFase]);
     this.faseAtual.quandoFinalizar.addListener(this.finalizaFase.bind(this));
-    this.faseAtual.demonstra();
+    this.faseAtual.iniciaDemonstracao();
   }
 
   finalizaFase() {
-    console.log('Fase finalizada!');
+    console.log('Partida.finalizaFase');
+    if (this.numFaseAtual < especificacoesFase.length - 1) {
+      this.numFaseAtual++;
+      this.iniciaFase(this.numFaseAtual);
+    } else {
+      var cenaGameOver = new CenaGameOver();
+      cenaGameOver.begin();
+    }
   }
 
 }

@@ -181,3 +181,9 @@ class CenaSuaVez extends CenaTextoFundoBranco {
     return 'Agora é sua vez!';
   }
 }
+
+class CenaGameOver extends CenaTextoFundoBranco {
+  getMensagem() {
+      return 'Obrigado por participar!'
+  }
+}

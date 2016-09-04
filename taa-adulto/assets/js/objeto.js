@@ -1,7 +1,5 @@
 /*jslint browser: true, indent: 2*/
 /*global createjs,loader,objetoCoords,portas,destacaPorta,stage*/
-var objetos = [];
-//var qtdObjetosPosicionados = 0;
 
 function carregaBitmapDoObjeto(idObjeto) {
   'use strict';
@@ -16,17 +14,6 @@ function carregaBitmapDoObjeto(idObjeto) {
   objeto.hitArea = hit;
 
   return objeto;
-}
-
-function qtdObjetosEmPortas() {
-  'use strict';
-  var i, qtd = 0;
-  for (i = 0; i < objetos.length; i += 1) {
-    if (objetos[i].idPorta !== null) {
-      qtd += 1;
-    }
-  }
-  return qtd;
 }
 
 function getIntersection(rect1, rect2) {
@@ -51,48 +38,6 @@ function getPortaSobObjeto(objeto) {
   return porta;
 }
 
-function soltaObjeto(evt) {
-  'use strict';
-
-  destacaPorta(null);
-
-  stage.canvas.style.cursor = "auto";
-
-  var objeto = evt.target,
-    idPorta = getPortaSobObjeto(objeto);
-
-  if (idPorta === null || idPorta < 0) {
-    // soltou fora de qualquer porta
-    moveObjetoParaCenario(objeto);
-    adicionaBinding(objeto, null);
-  } else if (idPorta === objeto.idPorta) {
-    // soltou na mesma porta
-    moveObjetoParaPorta(objeto, idPorta);
-    tocaAudio("posiciona-obj-duro");
-  } else if (portas[idPorta].idObjeto == null) {
-    // soltou em uma porta vazia
-    moveObjetoParaPorta(objeto, idPorta);
-    adicionaBinding(objeto, idPorta);
-    tocaAudio("posiciona-obj-duro");
-  } else {
-    // soltou em uma porta ocupada por outro objeto
-    moveObjetoParaCenario(objeto);
-  }
-
-  if (todosOsObjetosForamPosicionados()) {
-    var desfazUltimaAlocacao = function() {
-      moveObjetoParaCenario(objeto);
-      adicionaBinding(objeto, null);
-      ativaInteracaoObjetos();
-    }
-    desativaInteracaoObjetos();
-    var cenaConfirmarCorrigir = new CenaConfirmarCorrigir(
-      avancaFase,
-      desfazUltimaAlocacao);
-    cenaConfirmarCorrigir.begin();
-  }
-}
-
 function adicionaBinding(objeto, idPortaSobObjeto) {
   'use strict';
   if (objeto.idPorta == idPortaSobObjeto) {
@@ -108,77 +53,6 @@ function adicionaBinding(objeto, idPortaSobObjeto) {
   if (idPortaSobObjeto != null) {
     portas[idPortaSobObjeto].idObjeto = objeto.idObjeto;
   }
-}
-
-function removeObjeto(objeto) {
-  'use strict';
-  var idObjeto = objeto.idObjeto;
-  var indice = objetos.indexOf(idObjeto);
-  objetos.splice(indice, 1);
-  stage.removeChild(objeto);
-}
-
-function removeTodosOsObjetos() {
-  'use strict';
-  for (var i = objetos.length - 1; i >= 0; i--) {
-    removeObjeto(objetos[i]);
-  };
-}
-
-function objetoOnMouseDown(evt) {
-  console.log(this);
-  //this.parent.addChild(this);
-  this.offX = this.x - evt.stageX;
-  this.offY = this.y - evt.stageY;
-}
-
-function objetoOnPressMove(evt) {
-  stage.canvas.style.cursor = "none";
-  this.x = evt.stageX + this.offX;
-  this.y = evt.stageY + this.offY;
-  var match = getPortaSobObjeto(evt.target);
-  destacaPorta(match);
-}
-
-function defineObjetoInteragivel(objeto, interagivel) {
-  if (interagivel) {
-    objeto.on('mousedown', objetoOnMouseDown);
-    objeto.on('pressmove', objetoOnPressMove);
-    objeto.on('pressup', soltaObjeto);
-  } else {
-    objeto.removeAllEventListeners();
-  }
-}
-
-function ativaInteracaoObjetos() {
-  objetos.forEach(obj => defineObjetoInteragivel(obj, true));
-}
-
-function desativaInteracaoObjetos() {
-  objetos.forEach(obj => defineObjetoInteragivel(obj, false));
-}
-
-function adicionaObjeto(idObjeto, idPorta) {
-  'use strict';
-  var objeto = carregaBitmapDoObjeto(idObjeto);
-  objeto.portaCerta = idPorta;
-  objeto.idPorta = null;
-  objeto.idObjeto = idObjeto;
-  objeto.offX = 0;
-  objeto.offY = 0;
-
-  objeto.scaleX = objeto.scaleY = .5;
-  objeto.x = objeto.iniX = 50 + (idObjeto * 50) % 700;
-  objeto.y = objeto.iniY = 200 + 50 * (idObjeto % 2);
-
-  defineObjetoInteragivel(objeto, true);
-
-  return objeto;
-}
-
-function todosOsObjetosForamPosicionados() {
-  'use strict';
-  return qtdObjetosEmPortas() == qtdObjetosPorFase[faseAtual];
 }
 
 function getPosicaoDoObjetoNaPorta(objeto, idPorta) {
@@ -215,59 +89,4 @@ function moveObjetoParaCenario(objeto) {
     },
     300,
     createjs.Ease.getPowInOut(2));
-}
-
-function animaObjeto(numFase, especificacao, numObjeto) {
-  'use strict';
-  if (numObjeto >= especificacao.length) {
-    encerraDemonstracao(numFase);
-    return;
-  }
-  var registro = especificacao[numObjeto];
-
-  var objeto = carregaBitmapDoObjeto(registro.idObjeto);
-  objetos.push(objeto);
-  stage.addChild(objeto);
-  objeto.scaleX = 0.5;
-  objeto.scaleY = 0.5;
-  var posFinal = getPosicaoDoObjetoNaPorta(objeto, registro.idPorta);
-
-  objeto.x = (stage.canvas.width - objeto.getBounds().width) / 2;
-  objeto.y = (stage.canvas.height - objeto.getBounds().height) / 2 - 30;
-  objeto.scaleX = 1.0;
-  objeto.scaleY = 1.0;
-
-  var tween = createjs.Tween.get(objeto, {paused: true})
-    .call(abrePorta, [registro.idPorta])
-    .wait(500)
-    .to({
-        scaleX: 0.5,
-        scaleY: 0.5,
-        x: posFinal.x,
-        y: posFinal.y
-      },
-      1000)
-    .wait(100)
-    .call(function() {
-      stage.addChildAt(objeto, 1);
-    })
-    .call(fechaPorta, [registro.idPorta])
-    .wait(600)
-    .call(animaObjeto, [numFase, especificacao, numObjeto + 1]);
-
-  if (ehFaseTutorial(numFase)) {
-    var cena = new CenaConfirmarCorrigir(
-      () => tween.setPaused(false),
-      () => {});
-    cena.begin();
-  } else {
-    tween.setPaused(false);
-  }
-}
-
-function enviaObjetosParaOFundo() {
-  'use strict';
-  for (var i = 0; i < objetos.length; i++) {
-    stage.addChildAt(objetos[i], 1);
-  }
 }
