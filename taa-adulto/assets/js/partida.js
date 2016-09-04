@@ -126,9 +126,11 @@ class CenaDemonstracaoFase extends Cena {
       .call(this.animaObjeto.bind(this), [numObjeto + 1]);
 
     if (this.ehTutorial) {
-      var cena = new CenaConfirmarCorrigir(
-        () => tween.setPaused(false),
-        () => {});
+      var texto = (numObjeto == 0 ?
+          'Preste atenção neste objeto. Memorize a porta onde ele será guardado.' :
+          'Memorizou? Agora mais um objeto. Preste atenção onde ele será guardado.');
+      var cena = new CenaInstrucoes(texto,
+          () => tween.setPaused(false));
       cena.begin();
     } else {
       tween.setPaused(false);

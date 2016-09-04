@@ -69,14 +69,14 @@ class Cena {
   end() {}
 }
 
-function criaBotao(rotulo, onclick) {
+function criaBotao(rotulo, onclick, font, bgcolor) {
   var container = new createjs.Container(),
-      text = new createjs.Text(rotulo, '50px Arial', "#000"),
+      text = new createjs.Text(rotulo, font || '50px Arial', "#000"),
       box = new createjs.Shape(),
       paddingWidth = 9,
       paddingHeight = 3;
 
-  box.graphics.beginFill('#ffffff');
+  box.graphics.beginFill(bgcolor || '#ffffff');
   box.graphics.drawRect(0, 0,
       text.getBounds().width + 2 * paddingWidth,
       text.getBounds().height + 2 * paddingHeight);
@@ -139,6 +139,45 @@ class CenaConfirmarCorrigir extends Cena {
       stage.removeChild(this.btnConfirmar);
       stage.removeChild(this.boxDark);
     }
+  }
+}
+
+class CenaInstrucoes extends Cena {
+  constructor(texto, fnConfirmar) {
+    super();
+
+    this.x = 200;
+    this.y = 350;
+    this.width = 400;
+    this.height = 200;
+
+    this.fnConfirmar = fnConfirmar;
+    this.box = new createjs.Shape();
+    this.box.graphics.beginFill('#ffffff');
+    this.box.graphics.drawRect(this.x, this.y, this.width, this.height);
+    this.text = new createjs.Text(texto, '25px Arial', "#000");
+    this.text.lineWidth = 350;
+    this.text.x = 225;
+    this.text.y = 375;
+    var that = this;
+    this.button = criaBotao('OK', function () {
+      that.end();
+      that.fnConfirmar();
+    }, '25px Arial', '#cccccc');
+    this.button.x = this.x + this.width - 25 - this.button.getBounds().width;
+    this.button.y = this.y + this.height - 25 - this.button.getBounds().height;
+  }
+
+  begin() {
+    stage.addChild(this.box);
+    stage.addChild(this.text);
+    stage.addChild(this.button);
+  }
+
+  end() {
+    stage.removeChild(this.button);
+    stage.removeChild(this.text);
+    stage.removeChild(this.box);
   }
 }
 
