@@ -269,6 +269,7 @@ class CenaInteracaoFase extends Cena {
     var objeto = evt.target;
     objeto.offX = objeto.x - evt.stageX;
     objeto.offY = objeto.y - evt.stageY;
+    stage.addChild(objeto);
   }
 
   objetoOnPressMove(evt) {
