@@ -182,15 +182,12 @@ class CenaInstrucoes extends Cena {
 }
 
 class CenaTextoFundoBranco extends Cena {
-  constructor() {
+  constructor(mensagem) {
     super();
     this.box = new createjs.Shape();
     this.box.graphics.beginFill('#ffffff');
     this.box.graphics.drawRect(0, 0, stage.canvas.width, stage.canvas.height);
-    this.text = new createjs.Text(this.getMensagem(), this.getFont(), "#000");
-  }
-  getMensagem() {
-    return 'placelholder message';
+    this.text = new createjs.Text(mensagem || '', this.getFont(), "#000");
   }
   getFont() {
     return '50px Arial';
@@ -210,19 +207,29 @@ class CenaTextoFundoBranco extends Cena {
 }
 
 class CenaAtencao extends CenaTextoFundoBranco {
-  getMensagem() {
-    return 'Atenção!';
+  constructor() {
+    super('Atenção!');
   }
 }
 
 class CenaSuaVez extends CenaTextoFundoBranco {
-  getMensagem() {
-    return 'Agora é sua vez!';
+  constructor() {
+    super('Agora é sua vez!');
   }
 }
 
 class CenaGameOver extends CenaTextoFundoBranco {
-  getMensagem() {
-      return 'Obrigado por participar!'
+  constructor(porcentagem) {
+    super(`Obrigado por participar!\nSua pontuação é ${porcentagem.toFixed(0)}%`);
+  }
+
+  begin() {
+    super.begin();
+    // ...
+  }
+
+  end() {
+    // ...
+    super.end();
   }
 }

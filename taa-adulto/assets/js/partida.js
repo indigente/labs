@@ -454,9 +454,16 @@ class Partida {
       this.numFaseAtual++;
       this.iniciaFase(this.numFaseAtual);
     } else {
-      var cenaGameOver = new CenaGameOver();
-      cenaGameOver.begin();
+      this.finalizaPartida();
     }
+  }
+
+  finalizaPartida() {
+    var numObjetosTutorial = 2,
+      numObjetos = especificacoesFase.map(x => x.length / 3).reduce((a, b) => a + b, 0) - numObjetosTutorial,
+      porcentagem = 100 * pontuacaoAgregada() / numObjetos,
+      cenaGameOver = new CenaGameOver(porcentagem);
+    cenaGameOver.begin();
   }
 
 }

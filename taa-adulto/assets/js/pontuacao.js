@@ -85,6 +85,14 @@ function deveContinuar() {
   }
 }
 
+function pontuacaoFaseAgregada(p) {
+  return p === undefined ? 0 : (p.objCertoPortaCerta + (0.25 * p.objCerto) + (0.25 * p.portaCerta));
+}
+
+function pontuacaoAgregada() {
+  return pontuacao.length === 0 ? 0 : pontuacao.map(p => pontuacaoFaseAgregada(p)).reduce((a, b) => a + b, 0);
+}
+
 function pontuacaoArray() {
   var array = pontuacao.map(p => [p.totalObjetos, p.objCertoPortaCerta, p.objCerto, p.portaCerta]);
   array = [].concat.apply([], array)
