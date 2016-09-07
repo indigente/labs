@@ -76,24 +76,24 @@
     <tr>
       <th>Sexo</th>
       <td><select id="sexo" required>
-            <option disabled selected value="none">Escolhe o sexo...</option>
+            <option disabled selected value="none">Escolha o sexo...</option>
             <option value="m">Masculino</option>
             <option value="f">Feminino</option>
           </select>
       </td>
     </tr>
     <tr>
-      <th>Nascimento</th><td><input id="nascimento" type="date" required></td>
+      <th>Data de nascimento</th><td><input id="nascimento" type="date" required></td>
     </tr>
     <tr>
       <th>Escolaridade</th>
       <td><select id="escolaridade" required>
-            <option disabled selected value="none">Escolhe a escolaridade...</option>
+            <option disabled selected value="none">Escolha a escolaridade...</option>
             <option value="ef1">Ensino Fundamental I</option>
             <option value="ef2">Ensino Fundamental II</option>
             <option value="em">Ensino Médio</option>
             <option value="es">Ensino Superior</option>
-            <option value="ps">Pós-graduação</option>
+            <option value="ps">Pós-Graduação</option>
           </select>
       </td>
     </tr>
@@ -101,7 +101,7 @@
       <th>Local de aplicação</th>
       <td>
         <select id="local">
-          <option disabled selected value="none">Escolhe o estado...</option>
+          <option disabled selected value="none">Escolha o estado...</option>
           <option value="AC">AC</option>
           <option value="AL">AL</option>
           <option value="AP">AP</option>
@@ -273,7 +273,8 @@
     createjs.Ticker.addEventListener("tick", stage);
 
     // mostraMensagem("msgintro");
-    mostraJogo();
+    mostraFormulario();
+    // mostraJogo();
 
   }
 </script>

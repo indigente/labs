@@ -41,6 +41,9 @@ function mostraJogo() {
   'use strict';
   escondeTudo();
   $("#canvas").show();
+
+  var partida = new Partida();
+  partida.inicia();
   createjs.Ticker.setPaused(false);
 }
 
@@ -56,7 +59,7 @@ function validaForm(){
   if(valido)
     mostraJogo();
   else
-    alert("Compilar todo o formulario!");
+    alert("Preencha todo o formulário antes de continuar.");
 }
 
 class Cena {
