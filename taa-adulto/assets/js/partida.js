@@ -127,7 +127,7 @@ class CenaDemonstracaoFase extends Cena {
 
     if (this.ehTutorial) {
       var texto = (numObjeto == 0 ?
-          'Preste atenção neste objeto. Memorize a porta onde ele será guardado.' :
+          'Preste atenção neste objeto. Memorize o objeto e a porta onde ele será guardado.' :
           'Memorizou? Agora mais um objeto. Preste atenção onde ele será guardado.');
       var cena = new CenaInstrucoes(texto,
           () => tween.setPaused(false));
@@ -175,10 +175,17 @@ class CenaInteracaoFase extends Cena {
     this.definePosicaoInicialDosObjetos();
 
     var that = this;
-    this.objetos.forEach(function (obj) {
-      stage.addChild(obj);
-      that.defineObjetoInteragivel(obj, true);
-    });
+    this.objetos.forEach(obj => stage.addChild(obj));
+
+    if (this.ehTutorial) {
+      this.defineInteracaoObjetos(false);
+      var cena = new CenaInstrucoes('Agora arraste os dois objetos para as portas corretas.',
+          () => that.defineInteracaoObjetos(true));
+      cena.begin();
+
+    } else {
+      this.defineInteracaoObjetos(true);
+    }
   }
 
   end() {
@@ -242,6 +249,10 @@ class CenaInteracaoFase extends Cena {
       objeto.x = objeto.iniX = x1 + (i * semiwidth * 2) - (objeto.getBounds().width / 4);
       objeto.y = objeto.iniY = y1 + 2 * semiheight - (objeto.getBounds().height / 4);
     }
+  }
+
+  defineInteracaoObjetos(interagivel) {
+    this.objetos.forEach(obj => this.defineObjetoInteragivel(obj, interagivel));
   }
 
   defineObjetoInteragivel(objeto, interagivel) {
@@ -390,12 +401,24 @@ class Fase {
       that = this;
 
     var sucesso = (2 * pontuacao.objCertoPortaCerta === pontuacao.totalObjetos);
-    if (this.ehTutorial && !sucesso) {
-      this.iniciaDemonstracao();
+    if (this.ehTutorial) {
+      if (sucesso) {
+        var cena = new CenaInstrucoes('Muito bem! Agora vamos repetir esse desafio algumas vezes, aumentando a dificuldade. Só mostraremos o resultado no final. Você está pronto?',
+            this.finalizaFaseComSucesso.bind(this));
+        cena.begin();
+      } else {
+        var cena = new CenaInstrucoes('Vamos tentar mais uma vez? Preste atenção nos objetos e nas portas onde eles serão guardados.',
+            this.iniciaDemonstracao.bind(this));
+        cena.begin();
+      }
     } else {
-      this.enviaPontuacao(pontuacao);
-      this.quandoFinalizar.notify();
+      this.finalizaFaseComSucesso();
     }
+  }
+
+  finalizaFaseComSucesso() {
+    this.enviaPontuacao(pontuacao);
+    this.quandoFinalizar.notify();
   }
 
   enviaPontuacao(pontuacao) {
