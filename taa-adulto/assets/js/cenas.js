@@ -221,15 +221,23 @@ class CenaSuaVez extends CenaTextoFundoBranco {
 class CenaGameOver extends CenaTextoFundoBranco {
   constructor(porcentagem) {
     super(`Obrigado por participar!\nSua pontuação é ${porcentagem.toFixed(0)}%`);
+    this.button = criaBotao('info', this.mostraInfo.bind(this), '12px Arial');
+    this.button.x = 10;
+    this.button.y = 10;
+  }
+
+  mostraInfo() {
+    var tsv = pontuacaoTsv();
+    window.prompt('Digite Ctrl+C para copiar', tsv);
   }
 
   begin() {
     super.begin();
-    // ...
+    stage.addChild(this.button);
   }
 
   end() {
-    // ...
+    stage.removeChild(this.button);
     super.end();
   }
 }
