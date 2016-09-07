@@ -3,6 +3,12 @@
 
 var idioma = "pt"; // alternativa: en
 
+dadosUsuario = {};
+
+function dadosUsuarioTsv() {
+  var x = dadosUsuario;
+  return `${x.nome}\t${x.sexo}\t${x.nascimento}\t${x.escolaridade}\t${x.local}`;
+}
 
 function mudaIdioma(novoIdioma) {
   'use strict';
@@ -50,14 +56,22 @@ function mostraJogo() {
 function validaForm(){
   'use strict';
   var valido=false;
-  if((document.getElementById('nome').value).length>0)
-    if(document.getElementById('sexo').value!="none")
-      if(document.getElementById('nascimento').value!="")
-        if(document.getElementById('escolaridade').value!="none")
-          if(document.getElementById('local').value!="none")
-            valido=true;
-  if(valido)
+
+  dadosUsuario.nome = document.getElementById('nome').value;
+  dadosUsuario.sexo = document.getElementById('sexo').value;
+  dadosUsuario.nascimento = document.getElementById('nascimento').value;
+  dadosUsuario.escolaridade = document.getElementById('escolaridade').value;
+  dadosUsuario.local = document.getElementById('local').value;
+
+  valido = dadosUsuario.nome.length > 0 &&
+      dadosUsuario.sexo !== "none" &&
+      dadosUsuario.nascimento !== "" &&
+      dadosUsuario.escolaridade !== "none" &&
+      dadosUsuario.local !== "none";
+
+  if (valido) {
     mostraJogo();
+  }
   else
     alert("Preencha todo o formulário antes de continuar.");
 }
@@ -230,7 +244,7 @@ class CenaGameOver extends CenaTextoFundoBranco {
   }
 
   mostraInfo() {
-    var tsv = pontuacaoTsv();
+    var tsv = `${dadosUsuarioTsv()}\t${pontuacaoTsv()}`;
     window.prompt('Digite Ctrl+C para copiar', tsv);
   }
 
