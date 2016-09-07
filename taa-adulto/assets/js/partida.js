@@ -159,19 +159,19 @@ class CenaDemonstracaoFase extends Cena {
 }
 
 class CenaInteracaoFase extends Cena {
-  constructor(objetos, ehTutorial) {
+  constructor(objetos, ehTutorial, numFase) {
     super();
     this.ehTutorial = ehTutorial;
-    this.objetos = objetos;
-    this.rng = new RNG(1);
+    this.objetos = objetos.slice(0);
     this.quandoFinalizar = new Notifier();
+    this.rng = new RNG(numFase + 1);
+    this.embaralhaObjetos();
   }
 
   begin() {
     limpaTodasAsPortas(this.objetos);
     abreTodasAsPortas();
 
-    this.embaralhaObjetos();
     this.definePosicaoInicialDosObjetos();
 
     var that = this;
@@ -387,7 +387,7 @@ class Fase {
   }
 
   iniciaInteracao() {
-    this.cenaInteracao = new CenaInteracaoFase(this.objetos, this.ehTutorial);
+    this.cenaInteracao = new CenaInteracaoFase(this.objetos, this.ehTutorial, this.numFase);
     this.cenaInteracao.quandoFinalizar.addListener(this.finalizaInteracao.bind(this));
     this.cenaInteracao.begin();
   }
