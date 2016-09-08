@@ -460,7 +460,7 @@ class Partida {
 
   finalizaPartida() {
     var numObjetosTutorial = 2,
-      numObjetos = especificacoesFase.map(x => x.length / 3).reduce((a, b) => a + b, 0) - numObjetosTutorial,
+      numObjetos = especificacoesFase.map(x => x.length / 3).reduce((a, b) => a + b, 0),
       porcentagem = 100 * pontuacaoAgregada() / numObjetos,
       cenaGameOver = new CenaGameOver(porcentagem);
     cenaGameOver.begin();
