@@ -53,15 +53,20 @@ function mostraJogo() {
   createjs.Ticker.setPaused(false);
 }
 
+function valueForName(name) {
+  var selector = '.formulario.' + idioma + ' [name="' + name + '"]';
+  return $(selector).get('value');
+};
+
 function validaForm(){
   'use strict';
   var valido=false;
 
-  dadosUsuario.nome = document.getElementById('nome').value;
-  dadosUsuario.sexo = document.getElementById('sexo').value;
-  dadosUsuario.nascimento = document.getElementById('nascimento').value;
-  dadosUsuario.escolaridade = document.getElementById('escolaridade').value;
-  dadosUsuario.local = document.getElementById('local').value;
+  dadosUsuario.nome = valueForName('nome');
+  dadosUsuario.sexo = valueForName('sexo');
+  dadosUsuario.nascimento = valueForName('nascimento');
+  dadosUsuario.escolaridade = valueForName('escolaridade');
+  dadosUsuario.local = valueForName('local');
 
   valido = dadosUsuario.nome.length > 0 &&
       dadosUsuario.sexo !== "none" &&
@@ -73,7 +78,7 @@ function validaForm(){
     mostraJogo();
   }
   else
-    alert("Preencha todo o formulário antes de continuar.");
+    alert(_l("msg-complete-form"));
 }
 
 class Cena {
@@ -119,11 +124,11 @@ class CenaConfirmarCorrigir extends Cena {
     this.fnCorrigir = fnCorrigir;
 
     that = this;
-    this.btnConfirmar = criaBotao('Confirmar', function () {
+    this.btnConfirmar = criaBotao(_l('btn-confirm'), function () {
       that.end();
       that.fnConfirmar();
     });
-    this.btnCorrigir = criaBotao('Corrigir', function () {
+    this.btnCorrigir = criaBotao(_l('btn-correct'), function () {
       that.end();
       that.fnCorrigir();
     });
@@ -177,7 +182,7 @@ class CenaInstrucoes extends Cena {
     this.text.x = 225;
     this.text.y = 375;
     var that = this;
-    this.button = criaBotao('OK', function () {
+    this.button = criaBotao(_l('msg-ok'), function () {
       that.end();
       that.fnConfirmar();
     }, '25px Arial', '#cccccc');
@@ -225,19 +230,19 @@ class CenaTextoFundoBranco extends Cena {
 
 class CenaAtencao extends CenaTextoFundoBranco {
   constructor() {
-    super('Atenção!');
+    super(_l('msg-attention'));
   }
 }
 
 class CenaSuaVez extends CenaTextoFundoBranco {
   constructor() {
-    super('Agora é sua vez!');
+    super(_l("msg-your-turn"));
   }
 }
 
 class CenaGameOver extends CenaTextoFundoBranco {
   constructor(porcentagem) {
-    super(`Obrigado por participar!\nSua pontuação é ${porcentagem.toFixed(0)}%`);
+    super(_l("msg-thank-you") + porcentagem.toFixed(0) + "%");
     this.button = criaBotao('info', this.mostraInfo.bind(this), '12px Arial');
     this.button.x = 10;
     this.button.y = 10;
@@ -245,7 +250,7 @@ class CenaGameOver extends CenaTextoFundoBranco {
 
   mostraInfo() {
     var tsv = `${dadosUsuarioTsv()}\t${pontuacaoTsv()}`;
-    window.prompt('Digite Ctrl+C para copiar', tsv);
+    window.prompt(_l("msg+ctrl+c"), tsv);
   }
 
   begin() {

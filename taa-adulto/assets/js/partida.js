@@ -127,8 +127,8 @@ class CenaDemonstracaoFase extends Cena {
 
     if (this.ehTutorial) {
       var texto = (numObjeto == 0 ?
-          'Preste atenção neste objeto. Memorize o objeto e a porta onde ele será guardado.' :
-          'Memorizou? Agora mais um objeto. Preste atenção onde ele será guardado.');
+          _l("msg-tutorial-first-object") :
+          _l("msg-tutorial-second-object"));
       var cena = new CenaInstrucoes(texto,
           () => tween.setPaused(false));
       cena.begin();
@@ -179,7 +179,7 @@ class CenaInteracaoFase extends Cena {
 
     if (this.ehTutorial) {
       this.defineInteracaoObjetos(false);
-      var cena = new CenaInstrucoes('Agora arraste os dois objetos para as portas corretas.',
+      var cena = new CenaInstrucoes(_l("msg-drag-objects"),
           () => that.defineInteracaoObjetos(true));
       cena.begin();
 
@@ -404,11 +404,11 @@ class Fase {
     var sucesso = (2 * pontuacao.objCertoPortaCerta === pontuacao.totalObjetos);
     if (this.ehTutorial) {
       if (sucesso) {
-        var cena = new CenaInstrucoes('Muito bem! Agora vamos repetir esse desafio algumas vezes, aumentando a dificuldade. Só mostraremos o resultado no final. Você está pronto?',
+        var cena = new CenaInstrucoes(_l("msg-tutorial-correct"),
             this.finalizaFaseComSucesso.bind(this));
         cena.begin();
       } else {
-        var cena = new CenaInstrucoes('Vamos tentar mais uma vez? Preste atenção nos objetos e nas portas onde eles serão guardados.',
+        var cena = new CenaInstrucoes(_l("msg-tutorial-incorrect"),
             this.iniciaDemonstracao.bind(this));
         cena.begin();
       }

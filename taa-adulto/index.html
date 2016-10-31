@@ -13,6 +13,7 @@
   <script type="text/javascript" src="lib/rng.js"></script>
   <script type="text/javascript" src="lib/createjs-2015.11.26.min.js"></script>
   <script type="text/javascript" src="lib/soundjs-0.6.2.min.js"></script>
+  <script type="text/javascript" src="assets/js/l10n.js"></script>
   <script type="text/javascript" src="assets/js/audio.js"></script>
   <script type="text/javascript" src="assets/js/fases.js"></script>
   <script type="text/javascript" src="assets/js/objetocoords.js"></script>
@@ -74,11 +75,11 @@
     <h2>Preencha seus dados</h2>
     <table>
       <tr>
-        <th>Nome completo</th><td><input id="nome" required></td>
+        <th>Nome completo</th><td><input name="nome" required></td>
       </tr>
       <tr>
         <th>Sexo</th>
-        <td><select id="sexo" required>
+        <td><select name="sexo" required>
           <option disabled selected value="none">Escolha o sexo...</option>
           <option value="M">Masculino</option>
           <option value="F">Feminino</option>
@@ -86,11 +87,11 @@
       </td>
     </tr>
     <tr>
-      <th>Data de nascimento</th><td><input id="nascimento" type="date" required></td>
+      <th>Data de nascimento</th><td><input name="nascimento" type="date" required></td>
     </tr>
     <tr>
       <th>Escolaridade</th>
-      <td><select id="escolaridade" required>
+      <td><select name="escolaridade" required>
         <option disabled selected value="none">Escolha a escolaridade...</option>
         <option value="EF1">Ensino Fundamental I</option>
         <option value="EF2">Ensino Fundamental II</option>
@@ -103,7 +104,7 @@
   <tr>
     <th>Local de aplicação</th>
     <td>
-      <select id="local">
+      <select name="local">
         <option disabled selected value="none">Escolha o estado...</option>
         <option value="AC">AC</option>
         <option value="AL">AL</option>
@@ -149,7 +150,48 @@
 </div>
 
 <div class="formulario en">
+  <div style="padding: 15px 15px 15px 15px; font-size: 16px; font-family: Arial;">
+    <h1>Kitchen Arrangement Test</h1>
+    <h2>Fill in the form</h2>
+    <table>
+      <tr>
+        <th>Full name</th><td><input name="nome" required></td>
+      </tr>
+      <tr>
+        <th>Gender</th>
+        <td><select name="sexo" required>
+          <option disabled selected value="none">Choose your gender...</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>Birthdate</th><td><input name="nascimento" type="date" required></td>
+    </tr>
+    <tr>
+      <th>Educational level</th>
+      <td><select name="escolaridade" required>
+        <option disabled selected value="none">Choose your educational level...</option>
+        <option value="EF1">Incomplete primary school</option>
+        <option value="EF2">Primary school</option>
+        <option value="EM">Secondary school</option>
+        <option value="ES">Higher education</option>
+        <option value="PS">Post-graduate school</option>
+      </select>
+    </td>
+  </tr>
+  <input type="hidden" name="local" value="OutsideBR" />
+  <tr>
+    <td></td>
+    <td>
+      <p></p>
+      <button onclick="validaForm();">Begin</button>
+    </td>
+  </tr>
 
+</table>
+  </div>
 </div>
 
 <div class="mensagem pt msgintro">
