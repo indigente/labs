@@ -7,7 +7,8 @@ dadosUsuario = {};
 
 function dadosUsuarioTsv() {
   var x = dadosUsuario;
-  return `${x.nome}\t${x.sexo}\t${x.nascimento}\t${x.escolaridade}\t${x.local}`;
+  return '' + x['id'] + '\t' + JSON.stringify(x);
+  // return `${x.nome}\t${x.sexo}\t${x.nascimento}\t${x.escolaridade}\t${x.local}`;
 }
 
 function mudaIdioma(novoIdioma) {

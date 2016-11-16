@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <title>KAT</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/game.css" />
+  <script type="text/javascript" src="lib/cookies.min.js"></script>
+  <script type="text/javascript" src="lib/minified-web.js"></script>
+  <script type="text/javascript" src="assets/js/form.js"></script>
+  <script type="text/javascript">
+    var MINI = require('minified');
+    var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+  </script>
+</head>
+<body onload="initForm('en');">
+
+<form id="form" class="formulario">
+  <h1>KAT</h1>
+  <h2>Fill in the form</h2>
+  <table>
+    <tr>
+      <th>ID number</th>
+      <td><input name="id" required placeholder="entered by researcher"></td>
+    </tr>
+
+    <tr>
+      <th>Gender</th>
+      <td>
+        <select name="gender">
+          <option disabled selected value="none">Choose your gender...</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Age</th>
+      <td><input name="age" type="number"></td>
+    </tr>
+
+    <tr>
+      <th>Educational level</th>
+      <td>
+        <select name="escolaridade">
+          <option disabled selected value="none">Choose your highest academic qualification...</option>
+          <option value="no">I have no academic qualifications</option>
+          <option value="school">School certificate / O'levels / GSCEs or equivalent</option>
+          <option value="alevels">A'levels or equivalent</option>
+          <option value="ba">B.A., B.Sc. or equivalent from a university, college or polytechnic</option>
+          <option value="postgrad">Postgraduate degree (e.g. a masters or PhD)</option>
+          <option value="studying-ba">I am currently studying for a B.A. or equivalent</option>
+          <option value="studying-postgrad">I am currently studying for a postgraduate degree</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <p></p>
+        <button type="submit">Begin</button>
+      </td>
+    </tr>
+  </table>
+</form>
+
+</body>
+</html>

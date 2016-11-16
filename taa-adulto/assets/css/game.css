@@ -17,7 +17,9 @@ canvas, .mensagem, .formulario{
 
 .formulario {
   font-size: 1.5vw;
-  display: none;
+  padding: 15px 15px 15px 15px;
+  font-size: 16px;
+  font-family: Arial;
 }
 .formulario th{
   text-align: right;

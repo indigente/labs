@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Teste de Arrumação do Armário</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/game.css" />
+  <script type="text/javascript" src="lib/cookies.min.js"></script>
+  <script type="text/javascript" src="lib/minified-web.js"></script>
+  <script type="text/javascript" src="assets/js/form.js"></script>
+  <script type="text/javascript">
+    var MINI = require('minified');
+    var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+  </script>
+</head>
+<body onload="initForm('pt');">
+
+<form id="form" class="formulario">
+  <h1>Teste de Arrumação do Armário</h1>
+  <h2>Preencha seus dados</h2>
+  <table>
+    <tr>
+      <th>Identificador</th>
+      <td><input name="id" required placeholder="preenchido pelo pesquisador"></td>
+    </tr>
+
+    <tr>
+      <th>Nome completo</th><td><input name="nome" required></td>
+    </tr>
+    <tr>
+      <th>Sexo</th>
+      <td><select name="sexo" required>
+        <option disabled selected value="none">Escolha o sexo...</option>
+        <option value="M">Masculino</option>
+        <option value="F">Feminino</option>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <th>Data de nascimento</th><td><input name="nascimento" type="date" required></td>
+    </tr>
+    <tr>
+      <th>Escolaridade</th>
+      <td><select name="escolaridade" required>
+        <option disabled selected value="none">Escolha a escolaridade...</option>
+        <option value="EF1">Ensino Fundamental I</option>
+        <option value="EF2">Ensino Fundamental II</option>
+        <option value="EM">Ensino Médio</option>
+        <option value="ES">Ensino Superior</option>
+        <option value="PS">Pós-Graduação</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>Local de aplicação</th>
+      <td>
+        <select name="local" required>
+          <option disabled selected value="none">Escolha o estado...</option>
+          <option value="AC">AC</option>
+          <option value="AL">AL</option>
+          <option value="AP">AP</option>
+          <option value="AM">AM</option>
+          <option value="BA">BA</option>
+          <option value="CE">CE</option>
+          <option value="DF">DF</option>
+          <option value="ES">ES</option>
+          <option value="GO">GO</option>
+          <option value="MA">MA</option>
+          <option value="MT">MT</option>
+          <option value="MS">MS</option>
+          <option value="MG">MG</option>
+          <option value="PA">PA</option>
+          <option value="PB">PB</option>
+          <option value="PR">PR</option>
+          <option value="PE">PE</option>
+          <option value="PI">PI</option>
+          <option value="RJ">RJ</option>
+          <option value="RN">RN</option>
+          <option value="RS">RS</option>
+          <option value="RO">RO</option>
+          <option value="RR">RR</option>
+          <option value="SC">SC</option>
+          <option value="SP">SP</option>
+          <option value="SE">SE</option>
+          <option value="TO">TO</option>
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>
+        <p></p>
+        <button type="submit">Começar</button>
+      </td>
+    </tr>
+  </table>
+</form>
+
+</body>
+</html>
