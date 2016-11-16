@@ -171,7 +171,7 @@ class CenaInstrucoes extends Cena {
     this.x = 200;
     this.y = 350;
     this.width = 400;
-    this.height = 200;
+    this.height = 230;
 
     this.fnConfirmar = fnConfirmar;
     this.box = new createjs.Shape();
