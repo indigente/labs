@@ -8,8 +8,9 @@ localeStrings = {
 
     "msg-ok": "OK",
     "msg-attention": "Atenção!",
-    "msg-thank-you": "Obrigado por participar!\nSua pontuação é ",
-    "msg-control+c": 'Digite Ctrl+C para copiar',
+    "msg-thank-you": "Obrigado por participar!",
+    "msg-score": "Sua pontuação é",
+    "msg-control-c": 'Digite Ctrl+C para copiar',
     "msg-your-turn": 'Agora é sua vez!',
     "btn-confirm": "Confirmar",
     "btn-correct": "Corrigir",
@@ -25,8 +26,9 @@ localeStrings = {
 
     "msg-ok": "OK",
     "msg-attention": "Attention!",
-    "msg-thank-you": "Thank you for participating!\nYour score is ",
-    "msg-control+c": 'Press Ctrl+C to copy',
+    "msg-thank-you": "Thank you for participating!",
+    "msg-score": "Your score is",
+    "msg-control-c": 'Press Ctrl+C to copy',
     "msg-your-turn": "Now it's your turn!",
     "btn-confirm": "Confirm",
     "btn-correct": "Change",

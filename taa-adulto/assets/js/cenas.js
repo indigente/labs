@@ -4,6 +4,7 @@
 var idioma = "pt"; // alternativa: en
 
 dadosUsuario = {};
+partida = {};
 
 function dadosUsuarioTsv() {
   var x = dadosUsuario;
@@ -49,7 +50,11 @@ function mostraJogo() {
   escondeTudo();
   $("#canvas").show();
 
-  var partida = new Partida();
+  var showScoreCookie = Cookies.get('showScore');
+  Cookies.expire('showScore');
+  var showScore = showScoreCookie ? JSON.parse(showScoreCookie) : false;
+
+  partida = new Partida(showScore);
   partida.inicia();
   createjs.Ticker.setPaused(false);
 }
@@ -242,8 +247,11 @@ class CenaSuaVez extends CenaTextoFundoBranco {
 }
 
 class CenaGameOver extends CenaTextoFundoBranco {
-  constructor(porcentagem) {
-    super(_l("msg-thank-you") + porcentagem.toFixed(0) + "%");
+  constructor(porcentagem, showScore=false) {
+    super(_l("msg-thank-you") +
+      (showScore ?
+        "\n" + _l("msg-score") + " " + porcentagem.toFixed(0) + "%" :
+        ""));
     this.button = criaBotao('info', this.mostraInfo.bind(this), '12px Arial');
     this.button.x = 10;
     this.button.y = 10;
@@ -251,7 +259,7 @@ class CenaGameOver extends CenaTextoFundoBranco {
 
   mostraInfo() {
     var tsv = `${dadosUsuarioTsv()}\t${pontuacaoTsv()}`;
-    window.prompt(_l("msg+ctrl+c"), tsv);
+    window.prompt(_l("msg-control-c"), tsv);
   }
 
   begin() {

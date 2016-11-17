@@ -430,7 +430,8 @@ class Fase {
 }
 
 class Partida {
-  constructor() {
+  constructor(showScore=false) {
+    this.showScore = showScore;
   }
 
   inicia() {
@@ -462,7 +463,7 @@ class Partida {
     var numObjetosTutorial = 2,
       numObjetos = especificacoesFase.map(x => x.length / 3).reduce((a, b) => a + b, 0),
       porcentagem = 100 * pontuacaoAgregada() / numObjetos,
-      cenaGameOver = new CenaGameOver(porcentagem);
+      cenaGameOver = new CenaGameOver(porcentagem, this.showScore);
     cenaGameOver.begin();
   }
 
