@@ -6,7 +6,7 @@
 - Programadores passam muito tempo trabalhando e pouco tempo treinando.
 - Coding dojo: oportunidade para programadores aperfeiçoarem sua técnica com exercícios específicos antes de usá-la em problemas reais.
 
-> Coding dojo é uma encontro onde programadores se alternam no controle de um computador e tentam resolver um problema de programação com o objetivo de aprender ou aprimorar alguma técnica ou tecnologia.
+> Coding dojo é um encontro onde programadores se alternam no controle de um computador e tentam resolver um problema de programação com o objetivo de aprender ou aprimorar alguma técnica ou tecnologia.
 
 - O coding dojo é um ambiente convidativo, inclusivo e seguro para cometer erros, aprender e trabalhar em equipe.
 - O coding dojos NÃO é uma competição ou uma exibição de conhecimentos.

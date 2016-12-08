@@ -1,6 +1,6 @@
 # Coding dojos do Indigente
 
-Coding dojo é uma encontro onde programadores se alternam no controle de um computador e tentam resolver um problema de programação com o objetivo de aprender ou aprimorar alguma técnica ou tecnologia.
+Coding dojo é um encontro onde programadores se alternam no controle de um computador e tentam resolver um problema de programação com o objetivo de aprender ou aprimorar alguma técnica ou tecnologia.
 
 ## Instruções gerais
 
