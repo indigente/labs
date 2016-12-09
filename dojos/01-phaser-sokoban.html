@@ -2,21 +2,131 @@
 <html>
 <head>
   <title>Indigente</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.min.js"></script>
+  <script type="text/javascript" src="assets/phaser.min.js"></script>
 </head>
 <body>
 
 <script type="text/javascript">
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
+WIDTH = 50;
+HEIGHT = 50;
+
+mapa = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
+
 function preload() {
+  game.load.image('indigente', 'assets/cao-dir50.png');
+  game.load.image('grama', 'assets/grama50.png');
+  game.load.image('muro', 'assets/muro50.png');
+  game.load.image('latavazia', 'assets/lata-vazia50.png');
+  game.load.image('marca', 'assets/marca50.png');
+  game.load.image('latacheia', 'assets/lata-cheia50.png');
+
+
+  setas = game.input.keyboard.createCursorKeys();
 }
 
 function create() {
+  criarMapa();
+  player = game.add.sprite(50, 50, 'indigente');
+  player.mapax = 1;
+  player.mapay = 1;
+  lata = game.add.sprite(0, 0, 'latavazia');
+  lata.mapax = 3;
+  lata.mapay = 2;
+}
+
+function criarMapa() {
+  var x, y;
+  for (y = 0; y < mapa.length; y++) {
+    for (x = 0; x < mapa[y].length; x++) {
+      if (mapa[y][x] == 0){
+        game.add.sprite(x * WIDTH, y * HEIGHT, 'grama');
+      } else if (mapa[y][x] == 1){
+        game.add.sprite(x * WIDTH, y * HEIGHT, 'muro');
+      }
+      else if (mapa[y][x] == 2){
+        game.add.sprite(x * WIDTH, y * HEIGHT, 'marca');
+      }
+    }
+  }
+}
+
+function final(){
+  alert("brocacao vc, hein?");
+
 }
 
 function update() {
+  player.vx = 0;
+  player.vy = 0;
+  if (setas.right.justDown) {
+    player.vx = 1;
+    // if (mapa[(player.y)/50][(player.x + 50)/50] == 0) {
+    //   if (mapa[(lata.y)/50][(lata.x + 50)/50] == 0){
+    //     lata.x+=WIDTH;
+        // player.x += WIDTH;
+      // }
+    // }
+  } 
+    
+  if (setas.left.justDown) {
+    player.vx = -1;
+  }
+  if (setas.up.justDown) {
+    player.vy = -1;
+  }
+
+  if (setas.down.justDown) {
+    player.vy = 1;
+  }
+  terreno = mapa[player.mapay + player.vy][player.mapax + player.vx];
+  terreno2 = mapa[lata.mapay + player.vy][lata.mapax + player.vx];
+  // movimentacao
+  if (player.mapay + player.vy == lata.mapay && player.mapax + player.vx == lata.mapax ) {
+    if (terreno2 == 0) {
+      lata.mapay += player.vy;
+      lata.mapax += player.vx;
+      player.mapax += player.vx;
+      player.mapay += player.vy;
+      lata.loadTexture("latavazia");
+    }
+    else if (terreno2 == 2) {
+      lata.mapay += player.vy;
+      lata.mapax += player.vx;
+      player.mapax += player.vx;
+      player.mapay += player.vy;
+      lata.loadTexture("latacheia");
+      
+      setTimeout(final, 250);
+    }
+   }   
+
+   else if (terreno != 1) {
+    player.mapax += player.vx;
+    player.mapay += player.vy;
+  }
+
+
+  // 
+  player.x = player.mapax * WIDTH;
+  player.y = player.mapay * HEIGHT;
+  lata.x = lata.mapax * WIDTH;
+  lata.y = lata.mapay * HEIGHT;
 }
+
 </script>
 
 </body>

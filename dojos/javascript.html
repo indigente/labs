@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meu programa</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+  game.load.image('indigente', 'assets/cao-dir50.png');
+
+  setas = game.input.keyboard.createCursorKeys();
+}
+
+function create() {
+  player = game.add.sprite(0, 0, 'indigente');
+
+}
+
+function update() {
+  if (setas.right.isDown) {
+    player.x += 5;
+  }
+  if (setas.left.isDown) {
+    player.x -= 5;
+  }
+  if (setas.up.isDown) {
+    player.y -= 5;
+  }
+  if (setas.down.isDown) {
+    player.y += 5;
+  }
+
+}
+</script>
+
+</body>
+</html>
