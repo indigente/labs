@@ -9,8 +9,8 @@ Saiba mais sobre [coding dojos](dojo.md)
 ## 2016-12-19: Asteroids com a biblioteca Phaser
 
 - Jogo usado como inspiração: [Asteroids](http://www.zekechan.net/asteroids-html5-game-tutorial-5/) (ver final da página)
-- Jogo desenvolvido: TODO
-- Participantes: TODO
+- Jogo desenvolvido: [jogar](https://indigente.github.io/labs/dojos/02-phaser-asteroids.html) e [ver o código](https://github.com/indigente/labs/tree/gh-pages/dojos/02-phaser-asteroids.html)
+- Participantes: Rodrigo Rocha, Jailson Brito, Saulo Andrade, Enrique Wicks Rivas, Rogério Lázaro Júnior, Igor Ferreira, Daiane Mascarenhas, Raphael Matos Da Costa, Vagner Luís, Philippe Correia, Fernanda Barros, Rafael Brasileiro Pinto.
 
 ## 2016-12-09: Sokoban com a biblioteca Phaser
 
