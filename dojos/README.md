@@ -6,6 +6,12 @@ Coding dojo é um encontro onde programadores se alternam no controle de um comp
 
 Saiba mais sobre [coding dojos](dojo.md)
 
+## 2016-12-19: Asteroids com a biblioteca Phaser
+
+- Jogo usado como inspiração: [Asteroids](http://www.zekechan.net/asteroids-html5-game-tutorial-5/) (ver final da página)
+- Jogo desenvolvido: TODO
+- Participantes: TODO
+
 ## 2016-12-09: Sokoban com a biblioteca Phaser
 
 - Apresentação: a linguagem [JavaScript](https://gist.github.com/rodrigorgs/822973bd11b1a9c0b13381337afc4aa6), a biblioteca [Phaser](https://gist.github.com/rodrigorgs/a4126454bcdfbf9fa35efae4c2ed18a9) e o jogo [Sokoban](https://www.sokobanonline.com/)
