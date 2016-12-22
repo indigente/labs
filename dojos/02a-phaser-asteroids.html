@@ -55,9 +55,10 @@ function update() {
   }
   
   if (btnFire.justDown) {
-    if (bulletGroup.length < MAXSHOOTS){
-      shoot(player.x, player.y);
+    if (bulletGroup.length == MAXSHOOTS){
+      bulletGroup.getAt(0).destroy();
     }
+    shoot(player.x, player.y);
   }
 
   moveSprite(player);
