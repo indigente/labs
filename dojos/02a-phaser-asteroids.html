@@ -20,7 +20,9 @@ function preload() {
   game.load.image('ship', 'assets/ship.png');
   game.load.image('bullet', 'assets/bullet.png');
   game.load.image('asteroid-large', 'assets/asteroidLarge.png');
+  game.load.image('asteroid-large', 'assets/asteroidLarge.png');
   game.load.image('asteroid-medium', 'assets/asteroidMedium.png');
+  game.load.image('asteroid-small', 'assets/asteroidSmall.png');
 }
 
 function create() {
@@ -82,8 +84,14 @@ function checkColision(obj1, obj2){
       if(obj1 != player) {
         obj1.destroy();
       }
-      createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
-      createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
+
+      if (obj2.key == 'asteroid-large') {
+        createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
+        createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
+      } else if (obj2.key == 'asteroid-medium') {
+        createAsteroid(obj2.x, obj2.y, 'asteroid-small');
+        createAsteroid(obj2.x, obj2.y, 'asteroid-small');
+      }
   }
 }
 
