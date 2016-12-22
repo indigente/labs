@@ -30,9 +30,8 @@ function create() {
   player.vel = {x: 0, y: 0};
   player.pivot.set(player.width / 2, player.height / 2);
   
-  asteroidGroups = game.add.group();
-  asteroid = asteroidGroups.create(200, 200, 'asteroid-large');
-  asteroid.vel = {x: VEL_MAX, y: VEL_MAX};
+  asteroidGroup = game.add.group();
+  createAsteroid(200, 200, 'asteroid-large');
   
   btnFire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   cursors = game.input.keyboard.createCursorKeys();
@@ -57,19 +56,25 @@ function update() {
       shoot(player.x, player.y);
     }
   }
-  
+
+  moveSprite(player);
+
+  asteroidGroup.forEach(function (asteroid) {
+    moveSprite(asteroid);
+  });
   bulletGroup.forEach(function (bullet) {
     moveSprite(bullet);
-    checkColision(bullet, asteroid);
   });
-  
-  moveSprite(player);
-  moveSprite(asteroid);
-  checkColision(player,asteroid);
+
+  asteroidGroup.forEach(function (asteroid) {
+    bulletGroup.forEach(function (bullet) {
+      checkColision(bullet, asteroid);
+    });
+  });
 }
 
 function checkColision(obj1, obj2){
-  if(Phaser.Math.distance(obj1.x, obj1.y, obj2.x, obj2.y)
+  if(Phaser.Math.distance(obj1.centerX, obj1.centerY, obj2.centerX, obj2.centerY)
   < ((obj1.width/2) + (obj2.width/2))){
       console.log('Voce e Brocacao!!!');
       //obj1.destroy();
@@ -77,8 +82,19 @@ function checkColision(obj1, obj2){
       if(obj1 != player) {
         obj1.destroy();
       }
-      asteroidGroups.create(obj2.x, obj2.y, 'asteroid-medium');
+      createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
+      createAsteroid(obj2.x, obj2.y, 'asteroid-medium');
   }
+}
+
+function createAsteroid(x, y, key) {
+  var asteroid = asteroidGroup.create(x, y, key);
+  var rotation = Math.random() * 2 * Math.PI;
+  asteroid.vel = {
+    x: 1 * Math.cos(rotation),
+    y: 1 * Math.sin(rotation)
+  };
+  return asteroid;
 }
 
 function moveSprite(sprite) {
