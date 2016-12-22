@@ -15,6 +15,7 @@ var game = new Phaser.Game(LARGURA, ALTURA, Phaser.AUTO, '', { preload: preload,
 ACCELERATION = 0.10;
 VEL_MAX = 5;
 MAXSHOOTS = 4;
+VEL_BULLET = 4;
 
 function preload() {
   game.load.image('ship', 'assets/ship.png');
@@ -127,8 +128,8 @@ function shoot(x, y){
   var bullet = bulletGroup.create(x, y, 'bullet');
   bullet.bulletDir = player.rotation;
   bullet.vel = {
-    x: 2*Math.cos(bullet.bulletDir),
-    y: 2*Math.sin(bullet.bulletDir)
+    x: VEL_BULLET*Math.cos(bullet.bulletDir),
+    y: VEL_BULLET*Math.sin(bullet.bulletDir)
   };
 }
 
