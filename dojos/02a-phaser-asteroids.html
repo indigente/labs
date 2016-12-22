@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meu programa</title>
+  <script type="text/javascript" src="assets/phaser.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+var LARGURA = 800;
+var ALTURA = 600;
+
+var game = new Phaser.Game(LARGURA, ALTURA, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+ACCELERATION = 0.10;
+VEL_MAX = 5;
+MAXSHOOTS = 4;
+
+function preload() {
+  game.load.image('ship', 'assets/ship.png');
+  game.load.image('bullet', 'assets/bullet.png');
+  game.load.image('asteroid-large', 'assets/asteroidLarge.png');
+  game.load.image('asteroid-medium', 'assets/asteroidMedium.png');
+}
+
+function create() {
+  text = game.add.text(0, 0, "alo mundo", {fill: "#ffffff"});
+  player = game.add.sprite(50, 50, 'ship');
+  player.rotation = Math.PI / 4;
+  player.vel = {x: 0, y: 0};
+  player.pivot.set(player.width / 2, player.height / 2);
+  
+  asteroid = game.add.sprite(200, 200, 'asteroid-large');
+  asteroid.vel = {x: VEL_MAX, y: VEL_MAX};
+  
+  btnFire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  cursors = game.input.keyboard.createCursorKeys();
+  proxshoot = 0;
+  bullet = [];
+}
+
+function update() {
+  if(cursors.left.isDown){
+    player.rotation = player.rotation-Math.PI/32;
+  }
+  if (cursors.right.isDown){
+    player.rotation = player.rotation+Math.PI/32;
+  }
+  if (cursors.up.isDown){
+    player.vel.x += ACCELERATION * Math.cos(player.rotation);
+    player.vel.y += ACCELERATION * Math.sin(player.rotation);
+  }
+  
+  if (btnFire.justDown) {
+    if (proxshoot< MAXSHOOTS){
+      shoot(player.x, player.y, proxshoot % 4);
+    }
+  }
+  if (proxshoot > 0){
+    for (i = 0; i < Math.min(MAXSHOOTS,proxshoot); i++)
+    {
+    moveSprite(bullet[i]);
+    checkColision(bullet[i], asteroid);
+    }
+    //bullet[proxshoot].x += 2*Math.cos(bullet[proxshoot].bulletDir);
+    //bullet[proxshoot].y += 2*Math.sin(bullet[proxshoot].bulletDir);
+  }
+  
+  moveSprite(player);
+  moveSprite(asteroid);
+  checkColision(player,asteroid);
+}
+
+function checkColision(obj1, obj2){
+  if(Phaser.Math.distance(obj1.x, obj1.y, obj2.x, obj2.y)
+  < ((obj1.width/2) + (obj2.width/2))){
+      console.log('Voce e Brocacao!!!');
+      //obj1.destroy();
+      obj2.destroy();
+      if(obj1 != player) {
+        obj1.destroy();
+      }
+      game.add.sprite(obj2.x, obj2.y, 'asteroid-medium');
+  }
+}
+
+function moveSprite(sprite) {
+  sprite.x += Math.min(VEL_MAX, sprite.vel.x);
+  sprite.y += Math.min(VEL_MAX, sprite.vel.y);
+  
+  if(sprite.x > LARGURA){
+    sprite.x = 1;
+  }
+  if(sprite.x < 0){
+    sprite.x = LARGURA-1;
+  }
+  if(sprite.y < 0){
+    sprite.y = ALTURA-1;
+  }
+  if(sprite.y > ALTURA){
+    sprite.y = 1;
+  }
+}
+
+function shoot(x, y, i){
+  bullet[i] = game.add.sprite(x, y, 'bullet');
+  bullet[i].bulletDir = player.rotation;
+  bullet[i].vel = {
+    x: 2*Math.cos(bullet[i].bulletDir),
+    y: 2*Math.sin(bullet[i].bulletDir)
+  };
+  //i++;
+  proxshoot++;
+}
+
+</script>
+
+</body>
+</html>
