@@ -30,7 +30,8 @@ function create() {
   player.vel = {x: 0, y: 0};
   player.pivot.set(player.width / 2, player.height / 2);
   
-  asteroid = game.add.sprite(200, 200, 'asteroid-large');
+  asteroidGroups = game.add.group();
+  asteroid = asteroidGroups.create(200, 200, 'asteroid-large');
   asteroid.vel = {x: VEL_MAX, y: VEL_MAX};
   
   btnFire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -80,7 +81,7 @@ function checkColision(obj1, obj2){
       if(obj1 != player) {
         obj1.destroy();
       }
-      game.add.sprite(obj2.x, obj2.y, 'asteroid-medium');
+      asteroidGroups.create(obj2.x, obj2.y, 'asteroid-medium');
   }
 }
 
