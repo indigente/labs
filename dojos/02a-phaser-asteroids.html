@@ -36,8 +36,8 @@ function create() {
   
   btnFire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   cursors = game.input.keyboard.createCursorKeys();
-  proxshoot = 0;
-  bullet = [];
+
+  bulletGroup = game.add.group();
 }
 
 function update() {
@@ -53,19 +53,15 @@ function update() {
   }
   
   if (btnFire.justDown) {
-    if (proxshoot< MAXSHOOTS){
-      shoot(player.x, player.y, proxshoot % 4);
+    if (bulletGroup.length < MAXSHOOTS){
+      shoot(player.x, player.y);
     }
   }
-  if (proxshoot > 0){
-    for (i = 0; i < Math.min(MAXSHOOTS,proxshoot); i++)
-    {
-    moveSprite(bullet[i]);
-    checkColision(bullet[i], asteroid);
-    }
-    //bullet[proxshoot].x += 2*Math.cos(bullet[proxshoot].bulletDir);
-    //bullet[proxshoot].y += 2*Math.sin(bullet[proxshoot].bulletDir);
-  }
+  
+  bulletGroup.forEach(function (bullet) {
+    moveSprite(bullet);
+    checkColision(bullet, asteroid);
+  });
   
   moveSprite(player);
   moveSprite(asteroid);
@@ -103,15 +99,13 @@ function moveSprite(sprite) {
   }
 }
 
-function shoot(x, y, i){
-  bullet[i] = game.add.sprite(x, y, 'bullet');
-  bullet[i].bulletDir = player.rotation;
-  bullet[i].vel = {
-    x: 2*Math.cos(bullet[i].bulletDir),
-    y: 2*Math.sin(bullet[i].bulletDir)
+function shoot(x, y){
+  var bullet = bulletGroup.create(x, y, 'bullet');
+  bullet.bulletDir = player.rotation;
+  bullet.vel = {
+    x: 2*Math.cos(bullet.bulletDir),
+    y: 2*Math.sin(bullet.bulletDir)
   };
-  //i++;
-  proxshoot++;
 }
 
 </script>
