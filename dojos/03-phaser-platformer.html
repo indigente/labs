@@ -8,17 +8,121 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-
+var game = new Phaser.Game(500, 300, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 function preload() {
+  game.load.tilemap('fase1', 'assets/fase1.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.spritesheet('spritesheet', 'assets/spritesheet.png', 21, 21, -1, 2, 2);
 }
 
 function create() {
+  map = game.add.tilemap('fase1');
+  map.addTilesetImage('spritesheet', 'spritesheet');
+
+  layerFundo = map.createLayer('fundo');
+  layerFrente = map.createLayer('frente');
+
+  player = game.add.sprite(50, 10, 'spritesheet');
+  player.frame = 109;
+
+  chave = game.add.sprite(250, 42, 'spritesheet');
+  chave.frame = 403;
+  // porta1 = game.add.sprite(357, 63, 'spritesheet');
+  // porta1.frame = 700;
+  // porta2 = game.add.sprite(357, 84, 'spritesheet');
+  // porta2.frame = 730;
+  setas = game.input.keyboard.createCursorKeys();
+  pular = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  /////////////////
+
+  game.physics.startSystem(Phaser.Physics.P2JS);
+  game.physics.p2.gravity.y = 1000;
+  game.physics.p2.restitution = 0.1;
+
+  game.physics.p2.enable(player);
+  map.setCollisionBetween(1, 899);
+  game.physics.p2.convertTilemap(map, 'frente');
+
+  game.physics.p2.enable(chave);
+  chave.body.kinematic = true;
+  chave.body.data.shapes[0].sensor = true;
+
+  player.body.fixedRotation = true;
+  player.body.damping = 0.9;
+
+  ///////////////////
+
+  pegouchave = false;
+  pegougema = false;
+
+  ////////////
+  
+  gemas = game.add.group();
+
+  
+  map.createFromObjects("Objetos", 286, 'spritesheet', 286, true, true, gemas);
+  gemas.forEach(function (gema) {
+    game.physics.p2.enable(gema);
+    gema.body.kinematic = true;
+    gema.body.data.shapes[0].sensor = true;
+  });
+
 }
 
 function update() {
+  // player.body.velocity.x = 0;
+  if (setas.left.isDown) {
+    player.body.velocity.x = -150;
+    // console.log("Chamando Esquerda");
+  }
+  if (setas.right.isDown) {
+    player.body.velocity.x = 150;
+    // console.log("Chamando Direita");
+  }
+  if (setas.up.justDown) {
+    player.body.velocity.y = -300;
+    // console.log("Chamando Subir");
+  }
+  if (pular.justDown) {
+    player.body.velocity.y = -550;
+    // console.log("Chamando Pular");
+  }
+
+  //checkColision(player, chave);
+  player.body.onBeginContact.add(testeColision); 
 }
+
+function testeColision(bodyA, bodyB, shapeA, shapeB, equation)
+{
+  //console.log(bodyA);
+  if (pegouchave == false && bodyB.id == chave.body.id){
+    pegouchave = true;
+    chave.destroy();
+    console.log(bodyA);
+    map.replace(701, 702, 0, 0, map.width, map.height, "fundo");
+    map.replace(731, 732, 0, 0, map.width, map.height, "fundo");
+   }
+
+   gemas.forEach(function (gema) {
+    if (bodyB.id == gema.body.id) {
+      gema.destroy();
+    }
+   });
+
+}
+
+//function checkColision(obj1, obj2){
+  //if(Phaser.Math.distance(obj1.centerX, obj1.centerY, obj2.centerX, obj2.centerY)
+  //< ((obj1.width/2) + (obj2.width/2))){
+      // console.log('Voce e Brocacao!!!');
+    //pegouchave = true;
+      //obj2.destroy();
+      //map.replace(701, 702, 0, 0, map.width, map.height, "fundo");
+      //map.replace(731, 732, 0, 0, map.width, map.height, "fundo");
+      // porta1.frame = 701;
+      // porta2.frame = 731;
+    //}
+//}
 
 </script>
 
