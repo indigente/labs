@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Meu programa</title>
+  <title>Phaser - Asteroids</title>
   <script type="text/javascript" src="assets/phaser.min.js"></script>
 </head>
 <body>
@@ -32,10 +32,10 @@ function create() {
   player.rotation = Math.PI / 4;
   player.vel = {x: 0, y: 0};
   player.pivot.set(player.width / 2, player.height / 2);
-  
+
   asteroidGroup = game.add.group();
   createAsteroid(200, 200, 'asteroid-large');
-  
+
   btnFire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   cursors = game.input.keyboard.createCursorKeys();
 
@@ -53,7 +53,10 @@ function update() {
     player.vel.x += ACCELERATION * Math.cos(player.rotation);
     player.vel.y += ACCELERATION * Math.sin(player.rotation);
   }
-  
+  if (cursors.down.isDown){
+    player.vel.x -= ACCELERATION * Math.cos(player.rotation);
+    player.vel.y -= ACCELERATION * Math.sin(player.rotation);
+  }
   if (btnFire.justDown) {
     if (bulletGroup.length == MAXSHOOTS){
       bulletGroup.getAt(0).destroy();
@@ -110,7 +113,7 @@ function createAsteroid(x, y, key) {
 function moveSprite(sprite) {
   sprite.x += Math.min(VEL_MAX, sprite.vel.x);
   sprite.y += Math.min(VEL_MAX, sprite.vel.y);
-  
+
   if(sprite.x > LARGURA){
     sprite.x = 1;
   }
