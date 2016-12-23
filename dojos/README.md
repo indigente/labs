@@ -6,6 +6,12 @@ Coding dojo é um encontro onde programadores se alternam no controle de um comp
 
 Saiba mais sobre [coding dojos](dojo.md)
 
+## 2016-12-23: Plataforma com a biblioteca Phaser
+
+- Jogo usado como inspiração: qualquer jogo de plataforma
+- Jogo desenvolvido: [jogar](https://indigente.github.io/labs/dojos/03-phaser-platformer.html) e [ver o código](https://github.com/indigente/labs/tree/gh-pages/dojos/03-phaser-platformer.html)
+- Participantes: Daiane Mascarenhas, Rogério Lázaro Júnior, Raphael Matos Da Costa, Vagner Luís, José Roberto Filho, Enrique Wick Rivas, Lucas Souza, Flora Belas, Rodrigo Rocha.
+
 ## 2016-12-19: Asteroids com a biblioteca Phaser
 
 - Jogo usado como inspiração: [Asteroids](http://www.zekechan.net/asteroids-html5-game-tutorial-5/) (ver final da página)
